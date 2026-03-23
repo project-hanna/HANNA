@@ -16,10 +16,9 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 (CURSEUR À GAUCHE) ---
+# --- 3. ARCHITECTURE CSS BDD8.8 (SOUS-TITRE AGRANDI) ---
 st.markdown(f"""
     <style>
-    /* 1. Force le conteneur global à tout centrer */
     .main .block-container {{
         max-width: 550px !important;
         padding: 4rem 1rem !important;
@@ -30,7 +29,6 @@ st.markdown(f"""
         justify-content: center !important;
     }}
 
-    /* 2. Écrase les conteneurs verticaux pour le milieu */
     [data-testid="stVerticalBlock"], 
     [data-testid="stVerticalBlock"] > div,
     [data-testid="stVerticalBlock"] > div > div {{
@@ -41,7 +39,6 @@ st.markdown(f"""
         width: 100% !important;
     }}
 
-    /* 3. Header HANNA */
     .hanna-header {{
         width: 100% !important;
         text-align: center !important;
@@ -65,7 +62,21 @@ st.markdown(f"""
         line-height: 1;
     }}
 
-    /* 4. CHAMP DE SAISIE : Boîte centrée, mais texte/curseur à GAUCHE */
+    /* --- SOUS-TITRE AGRANDI --- */
+    .hanna-sub {{
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+        font-size: 13px; /* Augmenté de 9px à 13px */
+        color: #777;    /* Légèrement plus sombre pour la lisibilité */
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-top: 18px !important;
+        margin-right: -3px !important;
+        width: 100%;
+        text-align: center;
+    }}
+
+    /* 4. CHAMP DE SAISIE : Curseur à GAUCHE */
     div.stTextInput {{
         width: 100% !important;
         max-width: 480px !important;
@@ -73,21 +84,17 @@ st.markdown(f"""
     }}
     
     div.stTextInput input {{ 
-        text-align: left !important; /* CURSEUR À GAUCHE */
-        padding-left: 20px !important; /* Marge pour que le curseur ne colle pas au bord */
+        text-align: left !important; 
+        padding-left: 20px !important; 
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
         height: 50px !important;
-        width: 100% !important;
         background: #FDFDFD !important;
     }}
 
-    /* Alignement du placeholder "Demander à HANNA" à gauche également */
     ::placeholder {{ text-align: left !important; }}
     ::-webkit-input-placeholder {{ text-align: left !important; }}
-    ::-moz-placeholder {{ text-align: left !important; }}
 
-    /* Nettoyage UI */
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     </style>
 """, unsafe_allow_html=True)
@@ -108,22 +115,11 @@ st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
-        <p style="font-family: 'Inter'; font-weight: 300; font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px;">Hybrid Adaptive Navigator & Network Assistant</p>
+        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
 """, unsafe_allow_html=True)
 
 st.text_input("CAPTURE", 
               placeholder="Demander à HANNA", 
               label_visibility="collapsed", 
-              key="entry_input", 
-              on_change=handle_capture)
-
-st.write("<br>", unsafe_allow_html=True)
-
-for note in st.session_state.notes:
-    st.markdown(f"""
-        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
-            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
-            <span style="color: #222; font-size: 15px;">{note['text']}</span>
-        </div>
-    """, unsafe_allow_html=True)
+              key="entry_input",
