@@ -19,15 +19,20 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS BDD9.5 (XXL & MINIMALISTE) ---
+# --- ARCHITECTURE CSS BDD9.5 (XXL & ESPACEMENT OPTIMISÉ) ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
     /* Header Premium */
-    .hanna-header {{ text-align: center; margin-bottom: 1.5rem; }}
-    .hanna-logo {{ width: 120px; margin-bottom: 5px; }}
+    .hanna-header {{ text-align: center; margin-bottom: 2rem; }}
+    
+    /* Espacement de 2 lignes (3rem) entre logo et titre */
+    .hanna-logo {{ 
+        width: 120px; 
+        margin-bottom: 3rem; 
+    }}
     
     .hanna-title {{ 
         font-weight: 200; 
