@@ -120,4 +120,18 @@ st.markdown(f"""
 
 # Zone de saisie
 st.text_input("CAPTURE", 
-              placeholder="Demandez à HAN
+              placeholder="Demandez à HANNA", 
+              label_visibility="collapsed", 
+              key="entry_input", 
+              on_change=handle_capture)
+
+st.write("<br>", unsafe_allow_html=True)
+
+# Flux des captures
+for note in st.session_state.notes:
+    st.markdown(f"""
+        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
+            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
+            <span style="color: #222; font-size: 15px; font-family: 'Inter'; line-height: 1.5;">{note['text']}</span>
+        </div>
+    """, unsafe_allow_html=True)
