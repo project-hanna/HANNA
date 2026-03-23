@@ -15,7 +15,7 @@ st.markdown("""
     .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
     .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
     
-    /* Centrage et taille du logo à 50% */
+    /* Centrage et taille du logo à 50% sans décalage */
     [data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
@@ -23,6 +23,8 @@ st.markdown("""
     }
     [data-testid="stImage"] img {
         width: 50% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
     }
 
     .hanna-main-title { 
