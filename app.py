@@ -17,9 +17,9 @@ def display_centered_logo(file_path, width_px=120):
         st.markdown(
             f"""
             <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 10px;">
-                <img src="data:image/png;base64,{{data}}" style="width: {{width_px}}px; height: auto;">
+                <img src="data:image/png;base64,{data}" style="width: {width_px}px; height: auto;">
             </div>
-            """.format(data=data, width_px=width_px),
+            """,
             unsafe_allow_html=True
         )
 
@@ -99,4 +99,26 @@ if not st.session_state.auth:
 # --- PAGE 2 ---
 display_centered_logo(LOGO_FILE, 120)
 st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-st.markdown('<div
+st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
+
+st.divider()
+
+if 'notes' not in st.session_state:
+    st.session_state.notes = []
+
+new_note = st.text_input("CAPTURE :", label_visibility="collapsed", placeholder="Demandez à HANNA")
+
+if st.button("ENTRER", key="sync_btn"):
+    if new_note:
+        timestamp = datetime.now().strftime("%H:%M")
+        st.session_state.notes.append(f"[{timestamp}] {new_note}")
+        st.rerun()
+
+if st.session_state.notes:
+    for n in reversed(st.session_state.notes):
+        st.info(n)
+
+st.write("")
+if st.button("QUITTER LA SESSION"):
+    st.session_state.auth = False
+    st.rerun()
