@@ -3,10 +3,9 @@ from datetime import datetime
 import base64
 import os
 
-# --- 1. CONFIGURATION INITIALE ---
+# --- 1. CONFIGURATION ---
 st.set_page_config(page_title="HANNA", layout="centered", initial_sidebar_state="collapsed")
 
-PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo1.png"
 
 @st.cache_data(show_spinner=False)
@@ -18,10 +17,10 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 2. ARCHITECTURE CSS (CENTRAGE ABSOLU & RESPONSIVE) ---
+# --- 2. ARCHITECTURE CSS (CENTRAGE TOTAL & SUPPRESSION UI) ---
 st.markdown(f"""
     <style>
-    /* Forcer le centrage de TOUT le contenu Streamlit */
+    /* Force le centrage vertical et horizontal du bloc principal */
     .stMainBlockContainer {{
         display: flex;
         flex-direction: column;
@@ -30,32 +29,27 @@ st.markdown(f"""
     }}
     
     .block-container {{
-        padding-top: 2rem;
         max-width: 500px !important;
-        margin: auto;
+        padding-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }}
 
-    /* Header & Logo */
+    /* Header & Logo Centré */
     .hanna-header {{
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        margin-bottom: 2rem;
-    }}
-
-    .hanna-logo-container {{
-        margin-bottom: 15px;
-        display: block;
+        margin-bottom: 2.5rem;
     }}
 
     .hanna-logo {{
         width: 110px;
         height: auto;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+        margin-bottom: 15px;
     }}
 
     .hanna-title {{
@@ -65,7 +59,7 @@ st.markdown(f"""
         font-size: 42px;
         color: #1A1A1A;
         margin: 0;
-        padding-left: 12px; /* Equilibre le letter-spacing */
+        padding-left: 12px; /* Equilibre le letter-spacing pour un centrage optique */
     }}
 
     .hanna-sub {{
@@ -78,25 +72,29 @@ st.markdown(f"""
         margin-top: 8px;
     }}
 
-    /* UI Elements */
-    div[data-baseweb="input"] {{ border-radius: 12px !important; }}
-    input {{ text-align: center !important; font-size: 16px !important; }}
+    /* Input & Notes */
+    div[data-baseweb="input"] {{ 
+        border-radius: 12px !important; 
+        width: 100% !important;
+    }}
+    input {{ text-align: center !important; }}
     
     .stButton > button {{
         width: 100%;
         border-radius: 10px;
         border: 1px solid #EEE;
-        color: #BBB;
+        color: #CCC;
         font-size: 10px;
-        margin-top: 20px;
+        margin-top: 40px;
     }}
 
+    /* Masquer les éléments natifs Streamlit */
     #MainMenu, footer, header {{ visibility: hidden; height: 0; }}
     </style>
 """, unsafe_allow_html=True)
 
 # --- 3. RENDU DU HEADER ---
-logo_html = f"<div class='hanna-logo-container'><img src='data:image/png;base64,{LOGO_B64}' class='hanna-logo'></div>" if LOGO_B64 else ""
+logo_html = f"<img src='data:image/png;base64,{LOGO_B64}' class='hanna-logo'>" if LOGO_B64 else ""
 
 st.markdown(f"""
     <div class="hanna-header">
@@ -106,40 +104,33 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 4. GESTION DE LA SESSION & LOGIQUE ---
-if 'auth' not in st.session_state: st.session_state.auth = False
-if 'notes' not in st.session_state: st.session_state.notes = []
+# --- 4. LOGIQUE DE CAPTURE (SANS CONNEXION) ---
+if 'notes' not in st.session_state: 
+    st.session_state.notes = []
 
 def handle_capture():
     entry = st.session_state.get('entry_input', '').strip()
     if entry:
         ts = datetime.now().strftime("%H:%M")
-        st.session_state.notes.insert(0, {{"time": ts, "text": entry}})
+        st.session_state.notes.insert(0, {"time": ts, "text": entry})
         st.session_state.entry_input = "" 
 
-# --- 5. ROUTAGE (LE RESTE DU CODE) ---
-if not st.session_state.auth:
-    # Page Connexion
-    pwd = st.text_input("ACCÈS", type="password", placeholder="CODE D'ACCÈS", label_visibility="collapsed")
-    if pwd == PASSWORD_SYSTEM:
-        st.session_state.auth = True
-        st.rerun()
-    elif pwd:
-        st.caption("<p style='text-align:center; color:red;'>Accès refusé.</p>", unsafe_allow_html=True)
-else:
-    # Interface Capture
-    st.text_input("CAPTURE", placeholder="Échanger avec HANNA...", label_visibility="collapsed", key="entry_input", on_change=handle_capture)
-    
-    st.write("<br>", unsafe_allow_html=True)
-    
-    for note in st.session_state.notes:
-        st.markdown(f"""
-            <div style="padding: 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid #F0F0F0; margin-bottom: 10px; width: 100%;">
-                <span style="color: #007BFF; font-weight: bold; font-size: 11px;">{note['time']}</span>
-                <span style="color: #333; font-size: 14px; margin-left: 10px;">{note['text']}</span>
-            </div>
-        """, unsafe_allow_html=True)
+# Zone de saisie directe
+st.text_input("CAPTURE", placeholder="Capturez une idée ou une commande...", 
+              label_visibility="collapsed", key="entry_input", on_change=handle_capture)
 
-    if st.button("TERMINER LA SESSION"):
-        st.session_state.clear()
-        st.rerun()
+st.write("<br>", unsafe_allow_html=True)
+
+# Affichage des flux
+for note in st.session_state.notes:
+    st.markdown(f"""
+        <div style="padding: 14px; border-radius: 12px; background: #FBFBFB; border: 1px solid #F0F0F0; margin-bottom: 10px; width: 100%; text-align: left;">
+            <span style="color: #007BFF; font-weight: bold; font-size: 11px;">{note['time']}</span>
+            <span style="color: #333; font-size: 14px; margin-left: 10px;">{note['text']}</span>
+        </div>
+    """, unsafe_allow_html=True)
+
+# Bouton de reset de session
+if st.button("RÉINITIALISER LA SESSION"):
+    st.session_state.clear()
+    st.rerun()
