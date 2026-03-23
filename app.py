@@ -16,10 +16,10 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 (CENTRAGE TOTAL ET FORCÉ) ---
+# --- 3. ARCHITECTURE CSS BDD8.9 (STABILISATION FINALE) ---
 st.markdown(f"""
     <style>
-    /* 1. Force le conteneur global à tout centrer */
+    /* Centrage du bloc principal */
     .main .block-container {{
         max-width: 550px !important;
         padding: 4rem 1rem !important;
@@ -27,29 +27,31 @@ st.markdown(f"""
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
     }}
 
-    /* 2. Écrase TOUS les conteneurs verticaux de Streamlit pour forcer le milieu */
+    /* Forcer l'alignement central de tous les conteneurs Streamlit */
     [data-testid="stVerticalBlock"], 
-    [data-testid="stVerticalBlock"] > div,
-    [data-testid="stVerticalBlock"] > div > div {{
+    [data-testid="stVerticalBlock"] > div {{
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: center !important;
         width: 100% !important;
-        text-align: center !important;
     }}
 
-    /* 3. Header HANNA */
+    /* Header HANNA */
     .hanna-header {{
         width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
         margin-bottom: 3.5rem !important;
     }}
 
     .hanna-logo {{
         width: 120px !important;
+        height: auto !important;
         margin-bottom: 25px !important;
     }}
 
@@ -60,28 +62,41 @@ st.markdown(f"""
         color: #000;
         text-transform: uppercase;
         margin: 0 !important;
+        line-height: 1;
         letter-spacing: 14px; 
         margin-right: -14px !important; 
-        line-height: 1;
+        display: block !important;
     }}
 
-    /* 4. CHAMP DE SAISIE : Centrage Absolu de l'objet et du texte */
-    div.stTextInput {{
-        width: 100% !important;
-        max-width: 480px !important;
-        margin: 0 auto !important; /* Force le bloc au milieu */
+    .hanna-sub {{
+        font-family: 'Inter', sans-serif;
+        font-weight: 300;
+        font-size: 9px;
+        color: #999;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        margin-top: 15px !important;
+    }}
+
+    /* --- CORRECTION ULTIME DE LA BOÎTE DE SAISIE --- */
+    div.stTextInput {{ 
+        width: 100% !important; 
+        max-width: 480px !important; 
     }}
     
     div.stTextInput input {{ 
-        text-align: center !important; 
+        text-align: center !important; /* Centrage horizontal */
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
+        background: #FDFDFD !important;
+        
+        /* Centrage vertical absolu */
         height: 50px !important;
-        width: 100% !important;
-        padding: 0 !important; /* Élimine les décalages internes */
+        line-height: 50px !important; /* Aligne le texte au milieu de la hauteur */
+        padding: 0 !important;        /* Supprime les marges internes parasites */
     }}
 
-    /* Centrage du placeholder "Demander à HANNA" */
+    /* Centrage du Placeholder */
     ::placeholder {{ text-align: center !important; }}
     ::-webkit-input-placeholder {{ text-align: center !important; }}
     ::-moz-placeholder {{ text-align: center !important; }}
@@ -102,16 +117,15 @@ def handle_capture():
         st.session_state.notes.insert(0, {"time": ts, "text": entry})
         st.session_state.entry_input = "" 
 
-# --- 5. RENDU ---
+# --- 5. RENDU INTERFACE ---
 st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
-        <p style="font-family: 'Inter'; font-weight: 300; font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px;">Hybrid Adaptive Navigator & Network Assistant</p>
+        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Saisie
 st.text_input("CAPTURE", 
               placeholder="Demander à HANNA", 
               label_visibility="collapsed", 
@@ -120,7 +134,6 @@ st.text_input("CAPTURE",
 
 st.write("<br>", unsafe_allow_html=True)
 
-# Liste des captures (alignées à gauche pour la lisibilité)
 for note in st.session_state.notes:
     st.markdown(f"""
         <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
