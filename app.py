@@ -64,7 +64,6 @@ st.markdown("""
         height: 45px !important;
     }
 
-    /* Style spécifique pour le bouton Quitter en bas */
     .stButton > button {
         width: 100% !important;
         background-color: transparent !important;
@@ -116,9 +115,15 @@ new_note = st.text_input("CAPTURE", label_visibility="collapsed", placeholder="D
 if new_note:
     timestamp = datetime.now().strftime("%H:%M")
     st.session_state.notes.append(f"[{timestamp}] {new_note}")
-    # On vide le champ après validation
+    # Vidage manuel pour éviter les doublons au prochain rerun
     st.session_state.input_note = ""
     st.rerun()
 
 if st.session_state.notes:
-    for n in reversed(st.session_
+    for n in reversed(st.session_state.notes):
+        st.info(n)
+
+st.write("")
+if st.button("QUITTER LA SESSION"):
+    st.session_state.clear()
+    st.rerun()
