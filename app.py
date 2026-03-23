@@ -72,6 +72,7 @@ st.markdown(f"""
     
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        <br><br>
         <p class="hanna-title">HANNA</p>
         <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
