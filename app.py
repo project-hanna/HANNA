@@ -28,8 +28,19 @@ st.markdown(f"""
     
     /* Header Harmonisé */
     .hanna-header {{ text-align: center; margin-bottom: 1.5rem; }}
-    .hanna-logo {{ width: 120px; margin-bottom: 10px; }}
-    .hanna-title {{ font-weight: 200; letter-spacing: 10px; font-size: 28px; color: #000; text-transform: uppercase; margin: 0; }}
+    .hanna-logo {{ width: 120px; margin-bottom: 5px; }}
+    
+    /* TITRE AGRANDI */
+    .hanna-title {{ 
+        font-weight: 200; 
+        letter-spacing: 12px; 
+        font-size: 42px; 
+        color: #000; 
+        text-transform: uppercase; 
+        margin: 0; 
+        line-height: 1.2;
+    }}
+    
     .hanna-sub {{ font-weight: 300; font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }}
 
     /* Inputs Design */
@@ -79,6 +90,7 @@ if not st.session_state.auth:
             st.rerun()
         else:
             st.error("Accès refusé.")
+    st.stop()
 else:
     # Page Principale
     st.divider()
@@ -86,8 +98,9 @@ else:
                   key="entry", on_change=process_entry)
 
     # Affichage des notes
-    for note in reversed(st.session_state.notes):
-        st.info(note)
+    if st.session_state.notes:
+        for note in reversed(st.session_state.notes):
+            st.info(note)
 
     st.write("---")
     if st.button("QUITTER LA SESSION"):
