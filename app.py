@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import os
+import base64
 
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
@@ -9,33 +10,26 @@ PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE DESIGN BLANC & CENTRAGE ABSOLU ---
+# --- FONCTION POUR LE LOGO (FORCE LE CENTRAGE) ---
+def display_logo(file_path, width_percent=50):
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as f:
+            data = base64.b64encode(f.read()).decode("utf-8")
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 10px;">
+                <img src="data:image/png;base64,{data}" style="width: {width_percent}%; height: auto;">
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+# --- STYLE DESIGN BLANC & COMPACT ---
 st.markdown("""
     <style>
     .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
     .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
     
-    /* CENTRAGE UNIVERSEL PC & MOBILE */
-    /* On cible tous les niveaux de conteneurs d'image de Streamlit */
-    [data-testid="stImage"], [data-testid="stVerticalBlock"] > div > div > div > div > img {
-        display: block !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        text-align: center !important;
-    }
-
-    /* Conteneur parent de l'image */
-    div[data-testid="stImage"] {
-        display: flex !important;
-        justify-content: center !important;
-    }
-
-    /* Taille forcée à 50% */
-    [data-testid="stImage"] img {
-        width: 50% !important;
-        height: auto !important;
-    }
-
     .hanna-main-title { 
         font-weight: 200; 
         letter-spacing: 10px; 
@@ -89,9 +83,8 @@ if "auth" not in st.session_state:
 
 if not st.session_state.auth:
     st.write("")
-    if os.path.exists(LOGO_FILE):
-        # Utilisation d'un conteneur explicite pour aider le centrage
-        st.image(LOGO_FILE)
+    # Appel de la fonction de centrage forcé
+    display_logo(LOGO_FILE, 50)
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="hanna-sub-title">{PROJECT_NAME} | ACCÈS SÉCURISÉ</div>', unsafe_allow_html=True)
@@ -107,8 +100,7 @@ if not st.session_state.auth:
     st.stop()
 
 # --- INTERFACE PRINCIPALE ---
-if os.path.exists(LOGO_FILE):
-    st.image(LOGO_FILE)
+display_logo(LOGO_FILE, 50)
 
 st.markdown(f'<div class="hanna-main-title" style="font-size:22px; letter-spacing:4px; margin-top:0px;">{PROJECT_NAME}</div>', unsafe_allow_html=True)
 st.markdown(f'<div class="hanna-sub-title" style="margin-bottom:10px;">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
