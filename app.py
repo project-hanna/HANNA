@@ -1,4 +1,4 @@
-import streamlit st
+import streamlit as st  # <-- Correction faite ici
 from datetime import datetime
 import os
 
@@ -8,17 +8,17 @@ LOGO_FILE = "logo2.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE MICRO-TYPOGRAPHIE ---
+# --- STYLE MICRO-TYPOGRAPHIE (Luxe & Compact) ---
 st.markdown("""
     <style>
-    /* Suppression des marges pour un bloc compact */
+    /* Nettoyage des marges pour un bloc compact */
     .block-container { padding-top: 1.5rem !important; max-width: 320px !important; }
     .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
     /* Logo centré */
     [data-testid="stImage"] { display: flex !important; justify-content: center !important; margin-bottom: -15px !important; }
     
-    /* Titre HANNA */
+    /* Titre HANNA : Ultra-fin */
     .hanna-main-title { 
         font-weight: 100; 
         letter-spacing: 16px; 
@@ -40,7 +40,7 @@ st.markdown("""
         text-transform: uppercase;
     }
 
-    /* Champ de saisie : Très fin */
+    /* Champ de saisie : Très fin et droit */
     div.stTextInput > div > div > input {
         text-align: center;
         border: 1px solid #f5f5f5 !important;
@@ -50,18 +50,19 @@ st.markdown("""
         letter-spacing: 2px !important;
         text-transform: uppercase;
         background-color: #ffffff !important;
+        color: #000 !important;
     }
     
-    /* Bouton AUTHORIZE : Le plus fin possible */
+    /* Bouton AUTHORIZE : Micro-typographie bijou */
     .stButton > button {
         width: 100% !important;
         background-color: #000000 !important;
         color: #ffffff !important;
         border: none !important;
         font-weight: 200 !important; 
-        letter-spacing: 6px !important; /* Espacement extrême pour l'élégance */
-        font-size: 7.5px !important; /* Taille minuscule pour le chic */
-        height: 28px !important; /* Hauteur très fine */
+        letter-spacing: 6px !important; /* Espacement extrême */
+        font-size: 7.5px !important; /* Taille minuscule */
+        height: 28px !important; 
         border-radius: 0px !important;
         margin-top: -15px !important;
         text-transform: uppercase !important;
@@ -100,7 +101,7 @@ if not st.session_state.auth:
     st.stop()
 
 # --- INTERFACE PRINCIPALE ---
-st.markdown('<div style="font-weight:100; letter-spacing:5px; font-size:16px;">HANNA</div>', unsafe_allow_html=True)
+st.markdown('<div style="font-weight:100; letter-spacing:5px; font-size:16px; text-align:center;">HANNA</div>', unsafe_allow_html=True)
 st.divider()
 
 if 'notes' not in st.session_state:
