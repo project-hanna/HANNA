@@ -16,9 +16,10 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD9 ---
+# --- 3. ARCHITECTURE CSS BDD8.8 ---
 st.markdown(f"""
     <style>
+    /* Centrage du bloc principal */
     .main .block-container {{
         max-width: 550px !important;
         padding: 4rem 1rem !important;
@@ -26,44 +27,66 @@ st.markdown(f"""
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: center !important;
     }}
-    [data-testid="stVerticalBlock"] {{
+
+    /* Écrase les conteneurs verticaux de Streamlit */
+    [data-testid="stVerticalBlock"], 
+    [data-testid="stVerticalBlock"] > div,
+    [data-testid="stVerticalBlock"] > div > div {{
+        display: flex !important;
+        flex-direction: column !important;
         align-items: center !important;
+        justify-content: center !important;
         width: 100% !important;
+        text-align: center !important;
     }}
+
+    /* Header HANNA */
     .hanna-header {{
         width: 100% !important;
         margin-bottom: 3.5rem !important;
-        text-align: center !important;
     }}
+
     .hanna-logo {{
         width: 120px !important;
         margin-bottom: 25px !important;
     }}
+
     .hanna-title {{
         font-family: 'Inter', sans-serif;
         font-weight: 200;
         font-size: 52px;
         color: #000;
         text-transform: uppercase;
+        margin: 0 !important;
         letter-spacing: 14px; 
         margin-right: -14px !important; 
         line-height: 1;
     }}
+
+    /* CHAMP DE SAISIE */
     div.stTextInput {{
         width: 100% !important;
         max-width: 480px !important;
+        margin: 0 auto !important;
     }}
+    
     div.stTextInput input {{ 
-        text-align: left !important; 
-        padding: 0 20px !important;
+        text-align: center !important; 
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
         height: 50px !important;
+        width: 100% !important;
+        padding: 0 !important;
     }}
-    div.stTextInput input::placeholder {{ 
-        text-align: center !important; 
-    }}
+
+    /* Placeholder */
+    ::placeholder {{ text-align: center !important; }}
+    ::-webkit-input-placeholder {{ text-align: center !important; }}
+    ::-moz-placeholder {{ text-align: center !important; }}
+
+    /* Nettoyage UI */
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     </style>
 """, unsafe_allow_html=True)
