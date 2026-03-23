@@ -9,22 +9,28 @@ PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE DESIGN BLANC & COMPACT (GLOBAL) ---
+# --- STYLE DESIGN BLANC & COMPACT (CENTRAGE UNIVERSEL) ---
 st.markdown("""
     <style>
     .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
     .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
     
-    /* Centrage et taille du logo à 50% sans décalage */
+    /* Force le centrage du logo sur PC et Mobile */
     [data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
+        align-items: center !important;
         width: 100% !important;
+        text-align: center !important;
     }
+    
+    /* Taille à 50% avec marges automatiques forcées */
     [data-testid="stImage"] img {
         width: 50% !important;
+        max-width: 50% !important;
         margin-left: auto !important;
         margin-right: auto !important;
+        display: block !important;
     }
 
     .hanna-main-title { 
