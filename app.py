@@ -5,12 +5,12 @@ import base64
 
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
-LOGO_FILE = "logo1.png" # Mis à jour selon BDD3
+LOGO_FILE = "logo1.png"
 PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- FONCTION DE CENTRAGE ABSOLU (Pour le test) ---
+# --- FONCTION DE CENTRAGE ABSOLU ---
 def display_centered_logo(file_path, width_px=60):
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
@@ -83,10 +83,11 @@ if "auth" not in st.session_state:
 
 if not st.session_state.auth:
     st.write("")
-    display_centered_logo(LOGO_FILE, 120) # Plus grand pour l'accueil
+    display_centered_logo(LOGO_FILE, 120)
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="hanna-sub-title">{PROJECT_NAME} | ACCÈS SÉCURISÉ</div>', unsafe_allow_html=True)
+    # RETOUR AU TEXTE D'ORIGINE ICI
+    st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
     pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     
@@ -99,7 +100,7 @@ if not st.session_state.auth:
     st.stop()
 
 # --- INTERFACE PRINCIPALE ---
-display_centered_logo(LOGO_FILE, 60) # 60px comme demandé dans BDD3
+display_centered_logo(LOGO_FILE, 60)
 
 st.markdown(f'<div class="hanna-main-title" style="font-size:22px; letter-spacing:4px; margin-top:0px;">{PROJECT_NAME}</div>', unsafe_allow_html=True)
 st.markdown(f'<div class="hanna-sub-title" style="margin-bottom:10px;">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
