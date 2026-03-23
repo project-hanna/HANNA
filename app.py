@@ -16,10 +16,9 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.5 + CORRECTIF CIBLÉ PLACEHOLDER ---
+# --- 3. ARCHITECTURE CSS BDD8.5 + CENTRAGE PLACEHOLDER ---
 st.markdown(f"""
     <style>
-    /* Structure de base BDD8.5 */
     .main .block-container {{
         max-width: 550px !important;
         padding: 4rem 1rem !important;
@@ -27,7 +26,6 @@ st.markdown(f"""
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: flex-start !important;
     }}
 
     [data-testid="stVerticalBlock"] {{
@@ -48,7 +46,6 @@ st.markdown(f"""
         width: 120px !important;
         height: auto !important;
         margin-bottom: 25px !important;
-        display: block !important;
     }}
 
     .hanna-title {{
@@ -62,7 +59,6 @@ st.markdown(f"""
         letter-spacing: 14px; 
         margin-right: -14px !important; 
         display: block !important;
-        width: 100% !important;
     }}
 
     .hanna-sub {{
@@ -73,29 +69,60 @@ st.markdown(f"""
         letter-spacing: 2.5px;
         text-transform: uppercase;
         margin-top: 15px !important;
-        margin-right: -2.5px !important;
     }}
 
-    /* --- SEULE MODIFICATION : CENTRAGE FORCÉ DU PLACEHOLDER --- */
+    /* --- CENTRAGE DU CHAMP ET DU TEXTE 'DEMANDER À HANNA' --- */
     div.stTextInput {{ width: 100% !important; max-width: 480px !important; }}
     
     div.stTextInput input {{ 
-        text-align: center !important; /* Centre le texte saisi */
+        text-align: center !important; 
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
         height: 50px !important;
-        background: #FDFDFD !important;
     }}
 
-    /* Force le centrage du texte 'Demander à HANNA' pour tous les navigateurs */
-    div.stTextInput input::placeholder {{
-        text-align: center !important;
-        width: 100%;
-    }}
-    div.stTextInput input::-webkit-input-placeholder {{
-        text-align: center !important;
-    }}
-    div.stTextInput input::-moz-placeholder {{
-        text-align: center !important;
-    }}
-    div.stTextInput input:-ms-input-
+    /* Centrage spécifique du placeholder */
+    div.stTextInput input::placeholder {{ text-align: center !important; }}
+    div.stTextInput input::-webkit-input-placeholder {{ text-align: center !important; }}
+    div.stTextInput input::-moz-placeholder {{ text-align: center !important; }}
+    div.stTextInput input:-ms-input-placeholder {{ text-align: center !important; }}
+
+    #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
+    </style>
+""", unsafe_allow_html=True)
+
+# --- 4. LOGIQUE DE CAPTURE ---
+if 'notes' not in st.session_state: 
+    st.session_state.notes = []
+
+def handle_capture():
+    entry = st.session_state.get('entry_input', '').strip()
+    if entry:
+        ts = datetime.now().strftime("%H:%M")
+        st.session_state.notes.insert(0, {"time": ts, "text": entry})
+        st.session_state.entry_input = "" 
+
+# --- 5. RENDU ---
+st.markdown(f"""
+    <div class="hanna-header">
+        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        <h1 class="hanna-title">HANNA</h1>
+        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
+    </div>
+""", unsafe_allow_html=True)
+
+st.text_input("CAPTURE", 
+              placeholder="Demander à HANNA", 
+              label_visibility="collapsed", 
+              key="entry_input", 
+              on_change=handle_capture)
+
+st.write("<br>", unsafe_allow_html=True)
+
+for note in st.session_state.notes:
+    st.markdown(f"""
+        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
+            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
+            <span style="color: #222; font-size: 15px;">{note['text']}</span>
+        </div>
+    """, unsafe_allow_html=True)
