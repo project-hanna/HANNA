@@ -90,7 +90,8 @@ if not st.session_state.auth:
     else:
         st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
 
-    st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_index=False, unsafe_allow_html=True)
+    # CORRECTION ICI : Suppression de unsafe_allow_index
+    st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
     pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
