@@ -16,7 +16,7 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 ---
+# --- 3. ARCHITECTURE CSS BDD8.8 (CORRECTIONS D'ALIGNEMENT VERTICAL) ---
 st.markdown(f"""
     <style>
     /* Centrage du bloc principal */
@@ -65,7 +65,7 @@ st.markdown(f"""
         line-height: 1;
     }}
 
-    /* CHAMP DE SAISIE */
+    /* CHAMP DE SAISIE : ALIGNEMENT CURSEUR ET TEXTE */
     div.stTextInput {{
         width: 100% !important;
         max-width: 480px !important;
@@ -76,15 +76,26 @@ st.markdown(f"""
         text-align: center !important; 
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
+        background: #FDFDFD !important;
+        
+        /* Correction de l'alignement vertical */
         height: 50px !important;
-        width: 100% !important;
-        padding: 0 !important;
+        line-height: 50px !important; /* Force le curseur au milieu de la hauteur */
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        display: flex !important;
+        align-items: center !important;
     }}
 
     /* Placeholder */
-    ::placeholder {{ text-align: center !important; }}
-    ::-webkit-input-placeholder {{ text-align: center !important; }}
-    ::-moz-placeholder {{ text-align: center !important; }}
+    ::placeholder {{ 
+        text-align: center !important; 
+        line-height: 50px !important; 
+    }}
+    ::-webkit-input-placeholder {{ 
+        text-align: center !important; 
+        line-height: 50px !important; 
+    }}
 
     /* Nettoyage UI */
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
