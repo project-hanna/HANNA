@@ -1,78 +1,76 @@
 import streamlit as st
 from datetime import datetime
 import os
-import base64
 
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo1.png"
-PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- FONCTION POUR LE LOGO (FORCE LE CENTRAGE) ---
-def display_logo(file_path, width_percent=50):
-    if os.path.exists(file_path):
-        with open(file_path, "rb") as f:
-            data = base64.b64encode(f.read()).decode("utf-8")
-        st.markdown(
-            f"""
-            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-bottom: 10px;">
-                <img src="data:image/png;base64,{data}" style="width: {width_percent}%; height: auto;">
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-# --- STYLE DESIGN BLANC & COMPACT ---
+# --- STYLE ÉLÉGANT & CENTRAGE ABSOLU ---
 st.markdown("""
     <style>
-    .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
-    .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
+    .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
-    .hanna-main-title { 
-        font-weight: 200; 
-        letter-spacing: 10px; 
-        text-transform: uppercase; 
-        font-size: 28px; 
-        text-align: center; 
-        color: #000000;
-        margin-top: 10px;
-        margin-bottom: 2px;
+    /* Centrage horizontal du logo et du conteneur d'image */
+    .stImage {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    .stImage > div {
+        display: flex !important;
+        justify-content: center !important;
     }
     
+    /* Titre HANNA : Espacement large */
+    .hanna-main-title { 
+        font-weight: 200; 
+        letter-spacing: 12px; 
+        text-transform: uppercase; 
+        font-size: clamp(24px, 5vw, 32px); 
+        text-align: center; 
+        color: #000000;
+        margin-top: 20px;
+        margin-bottom: 5px;
+        width: 100%;
+    }
+    
+    /* Sous-titre complet */
     .hanna-sub-title {
         font-weight: 300;
-        font-size: 10px;
+        font-size: clamp(10px, 3vw, 11px);
         text-align: center;
         color: #999999;
         letter-spacing: 1.5px;
-        margin-bottom: 25px;
+        margin-bottom: 40px;
         text-transform: uppercase;
+        width: 100%;
     }
 
+    /* Input et Boutons centrés */
     div.stTextInput > div > div > input {
         text-align: center;
-        background-color: #fcfcfc !important;
-        border: 1px solid #f0f0f0 !important;
+        border: 1px solid #eeeeee !important;
         border-radius: 4px !important;
-        height: 40px !important;
+        height: 45px;
     }
     
     .stButton > button {
-        width: 100% !important;
-        background-color: #000000 !important;
-        color: #ffffff !important;
-        border: none !important;
-        font-weight: 400 !important;
-        letter-spacing: 2px !important;
-        height: 40px !important;
-        border-radius: 4px !important;
-        text-transform: uppercase !important;
-        font-size: 12px !important;
+        width: 100%;
+        background-color: #000000;
+        color: #ffffff;
+        border: none;
+        font-weight: 300;
+        letter-spacing: 2px;
+        height: 45px;
+        border-radius: 4px;
     }
-    .stButton > button:hover { background-color: #333333 !important; }
+    .stButton > button:hover { background-color: #222222; color: #ffffff; }
 
+    /* Masquage interface Streamlit */
     #MainMenu, footer, header { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
@@ -83,44 +81,59 @@ if "auth" not in st.session_state:
 
 if not st.session_state.auth:
     st.write("")
-    # Appel de la fonction de centrage forcé
-    display_logo(LOGO_FILE, 50)
+    st.write("")
+    
+    # Affichage du logo centré (Page 1)
+    if os.path.exists(LOGO_FILE):
+        st.image(LOGO_FILE, width=160)
+    else:
+        st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="hanna-sub-title">{PROJECT_NAME} | ACCÈS SÉCURISÉ</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
-    pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
+    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
     
-    if st.button("ENTRER"):
+    if st.button("AUTHORIZE"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
         else:
-            st.error("Accès refusé.")
+            st.error("Invalid credentials.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE ---
-display_logo(LOGO_FILE, 50)
+# --- INTERFACE PRINCIPALE (Page 2 - MISE EN PAGE IDENTIQUE) ---
 
-st.markdown(f'<div class="hanna-main-title" style="font-size:22px; letter-spacing:4px; margin-top:0px;">{PROJECT_NAME}</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="hanna-sub-title" style="margin-bottom:10px;">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
+# Rappel du Logo (Légèrement réduit pour plus d'espace de travail)
+if os.path.exists(LOGO_FILE):
+    st.image(LOGO_FILE, width=110)
+else:
+    st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
+
+# Rappel du Titre et Sous-titre
+st.markdown('<div class="hanna-main-title" style="font-size:26px; letter-spacing:8px; margin-top:10px;">HANNA</div>', unsafe_allow_html=True)
+st.markdown('<div class="hanna-sub-title" style="margin-bottom:20px;">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
 
 st.divider()
 
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
-new_note = st.text_input("CAPTURE :", label_visibility="collapsed", placeholder="Saisir une information...")
-if st.button("SYNCHRONISER"):
-    if new_note:
-        st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
-        st.rerun()
+# Section de capture de données
+with st.expander("NEW DATA ENTRY", expanded=True):
+    new_note = st.text_input("Capture:", key="main_input", placeholder="Type information here...")
+    if st.button("SYNCHRONIZE"):
+        if new_note:
+            st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
+            st.success("Entry recorded.")
 
+# Affichage des données
 if st.session_state.notes:
     for n in reversed(st.session_state.notes):
         st.info(n)
 
 st.write("")
-if st.button("QUITTER LA SESSION"):
+# Bouton de sortie
+if st.button("TERMINATE SESSION"):
     st.session_state.auth = False
     st.rerun()
