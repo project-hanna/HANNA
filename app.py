@@ -16,7 +16,7 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.9 (STABILISATION FINALE) ---
+# --- 3. ARCHITECTURE CSS BDD8.8 (VERSION RESTAURÉE ET CORRIGÉE) ---
 st.markdown(f"""
     <style>
     /* Centrage du bloc principal */
@@ -27,14 +27,10 @@ st.markdown(f"""
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: flex-start !important;
     }}
 
-    /* Forcer l'alignement central de tous les conteneurs Streamlit */
-    [data-testid="stVerticalBlock"], 
-    [data-testid="stVerticalBlock"] > div {{
-        display: flex !important;
-        flex-direction: column !important;
+    /* Force le centrage Streamlit */
+    [data-testid="stVerticalBlock"] {{
         align-items: center !important;
         width: 100% !important;
     }}
@@ -51,7 +47,6 @@ st.markdown(f"""
 
     .hanna-logo {{
         width: 120px !important;
-        height: auto !important;
         margin-bottom: 25px !important;
     }}
 
@@ -59,56 +54,38 @@ st.markdown(f"""
         font-family: 'Inter', sans-serif;
         font-weight: 200;
         font-size: 52px;
-        color: #000;
-        text-transform: uppercase;
-        margin: 0 !important;
-        line-height: 1;
         letter-spacing: 14px; 
         margin-right: -14px !important; 
-        display: block !important;
-    }}
-
-    .hanna-sub {{
-        font-family: 'Inter', sans-serif;
-        font-weight: 300;
-        font-size: 9px;
-        color: #999;
-        letter-spacing: 2.5px;
         text-transform: uppercase;
-        margin-top: 15px !important;
+        line-height: 1;
     }}
 
-    /* --- CORRECTION ULTIME DE LA BOÎTE DE SAISIE --- */
-    div.stTextInput {{ 
-        width: 100% !important; 
-        max-width: 480px !important; 
+    /* --- CORRECTION CENTRAGE BOÎTE & TEXTE --- */
+    div.stTextInput {{
+        width: 100% !important;
+        max-width: 480px !important;
     }}
-    
-    div.stTextInput input {{ 
-        text-align: center !important; /* Centrage horizontal */
+
+    /* Ciblage précis pour l'alignement vertical du texte et du curseur */
+    .stTextInput > div > div > input {{ 
+        text-align: center !important; 
         border-radius: 12px !important; 
-        border: 1px solid #EEE !important;
-        background: #FDFDFD !important;
-        
-        /* Centrage vertical absolu */
         height: 50px !important;
-        line-height: 50px !important; /* Aligne le texte au milieu de la hauteur */
-        padding: 0 !important;        /* Supprime les marges internes parasites */
+        padding-top: 0 !important;    /* Supprime le décalage vers le bas */
+        padding-bottom: 0 !important; /* Équilibre le centrage vertical */
+        line-height: 50px !important; /* Aligne le texte sur la hauteur totale */
     }}
 
-    /* Centrage du Placeholder */
+    /* Centrage du placeholder */
     ::placeholder {{ text-align: center !important; }}
     ::-webkit-input-placeholder {{ text-align: center !important; }}
-    ::-moz-placeholder {{ text-align: center !important; }}
 
-    /* Nettoyage UI */
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 4. LOGIQUE DE CAPTURE ---
-if 'notes' not in st.session_state: 
-    st.session_state.notes = []
+# --- 4. LOGIQUE ---
+if 'notes' not in st.session_state: st.session_state.notes = []
 
 def handle_capture():
     entry = st.session_state.get('entry_input', '').strip()
@@ -117,12 +94,12 @@ def handle_capture():
         st.session_state.notes.insert(0, {"time": ts, "text": entry})
         st.session_state.entry_input = "" 
 
-# --- 5. RENDU INTERFACE ---
+# --- 5. RENDU ---
 st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
-        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
+        <p style="font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px;">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -136,8 +113,7 @@ st.write("<br>", unsafe_allow_html=True)
 
 for note in st.session_state.notes:
     st.markdown(f"""
-        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
-            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
-            <span style="color: #222; font-size: 15px;">{note['text']}</span>
+        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; text-align: left; width: 100%;">
+            <small style="color: #007BFF; font-weight: 800;">{note['time']}</small><br>{note['text']}
         </div>
     """, unsafe_allow_html=True)
