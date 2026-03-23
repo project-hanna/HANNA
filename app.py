@@ -6,63 +6,67 @@ import os
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo2.png"
 
-st.set_page_config(page_title="HANNA Terminal", layout="centered")
+st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ÉLÉGANT (LIGHT & REFINED) ---
+# --- STYLE ÉLÉGANT & CENTRÉ ---
 st.markdown("""
     <style>
-    /* Fond blanc pur */
-    .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', 'Segoe UI', Helvetica, sans-serif; }
+    /* Fond blanc pur et typographie moderne */
+    .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', 'Segoe UI', sans-serif; }
     
-    /* Centrage global du logo */
-    .stImage { display: flex; justify-content: center; padding-bottom: 10px; }
+    /* Centrage horizontal forcé du logo */
+    .stImage > img { display: block; margin-left: auto; margin-right: auto; }
     
-    /* Typographie HANNA : Fine et élégante */
-    .hanna-title { 
+    /* Titre HANNA : Ultra fin et élégant */
+    .hanna-main-title { 
         font-weight: 200; 
-        letter-spacing: 4px; 
+        letter-spacing: 12px; 
         text-transform: uppercase; 
-        font-size: 28px; 
+        font-size: 32px; 
         text-align: center; 
-        color: #1a1a1a;
-        margin-top: 10px;
+        color: #000000;
+        margin-top: 25px;
         margin-bottom: 5px;
     }
     
-    .hanna-subtitle {
+    /* Sous-titre complet : Fin et gris clair */
+    .hanna-sub-title {
         font-weight: 300;
-        font-size: 12px;
+        font-size: 11px;
         text-align: center;
-        color: #888888;
-        letter-spacing: 2px;
-        margin-bottom: 30px;
+        color: #999999;
+        letter-spacing: 1.5px;
+        margin-bottom: 40px;
+        text-transform: uppercase;
     }
 
-    /* Champs de saisie discrets */
-    input { 
-        background-color: #fcfcfc !important; 
-        color: #333 !important; 
-        border: 1px solid #eeeeee !important; 
-        border-radius: 4px !important;
+    /* Input au centre */
+    div.stTextInput > div > div > input {
+        background-color: #fcfcfc !important;
         text-align: center;
+        border: 1px solid #eeeeee !important;
+        border-radius: 2px !important;
+        height: 45px;
     }
     
-    /* Bouton minimaliste noir */
-    .stButton>button { 
-        width: 100%; 
-        background-color: #000000; 
-        color: #ffffff; 
-        border: none; 
-        font-weight: 300; 
-        letter-spacing: 1px;
+    /* Bouton d'accès minimaliste */
+    .stButton > button {
+        width: 100%;
+        background-color: #000000;
+        color: #ffffff;
+        border: none;
+        font-weight: 300;
+        letter-spacing: 2px;
         height: 45px;
-        transition: 0.3s;
+        border-radius: 2px;
+        margin-top: 10px;
     }
-    .stButton>button:hover { background-color: #333333; color: #ffffff; }
+    .stButton > button:hover { background-color: #222222; color: #ffffff; }
 
-    /* Suppression des éléments Streamlit parasites */
+    /* Masquage des éléments Streamlit */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
     """, unsafe_allow_html=True)
 
@@ -73,47 +77,49 @@ if "auth" not in st.session_state:
 if not st.session_state.auth:
     st.write("")
     st.write("")
+    st.write("")
     
-    # Logo au centre
+    # Affichage du logo centré
     if os.path.exists(LOGO_FILE):
-        st.image(LOGO_FILE, width=140)
+        st.image(LOGO_FILE, width=160)
     else:
         st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
 
-    # Titre élégant
-    st.markdown('<div class="hanna-title">HANNA TERMINAL</div>', unsafe_allow_html=True)
-    st.markdown('<div class="hanna-subtitle">HYBRID ADAPTIVE NAVIGATOR</div>', unsafe_allow_html=True)
+    # Nouveaux titres
+    st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
-    pwd = st.text_input("AUTHORIZATION CODE", type="password", label_visibility="collapsed", placeholder="Enter Code")
+    # Champ de code sans label pour le minimalisme
+    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
     
-    if st.button("UNLOCK SYSTEM"):
+    if st.button("AUTHORIZE"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
         else:
-            st.error("Access Denied.")
+            st.error("Invalid credentials.")
     st.stop()
 
 # --- INTERFACE PRINCIPALE (DÉVERROUILLÉE) ---
-st.markdown('<div class="hanna-title" style="text-align:left; font-size:20px;">HANNA TERMINAL</div>', unsafe_allow_html=True)
-st.caption(f"Status: Operational | {datetime.now().strftime('%H:%M')}")
+st.markdown('<div class="hanna-main-title" style="text-align:left; font-size:22px; letter-spacing:5px;">HANNA</div>', unsafe_allow_html=True)
+st.caption(f"Network Assistant | System Ready | {datetime.now().strftime('%H:%M')}")
 
 st.divider()
 
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
-with st.expander("NEW ENTRY", expanded=True):
-    new_note = st.text_input("Data:", key="main_input", placeholder="..." )
-    if st.button("COMMIT TO MEMORY"):
+with st.expander("NEW DATA ENTRY", expanded=True):
+    new_note = st.text_input("Capture:", key="main_input", placeholder="Type information here...")
+    if st.button("SYNCHRONIZE"):
         if new_note:
             st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
-            st.success("Synchronized.")
+            st.success("Entry recorded.")
 
 if st.session_state.notes:
     for n in reversed(st.session_state.notes):
         st.info(n)
 
-if st.button("LOCK SYSTEM"):
+if st.button("TERMINATE SESSION"):
     st.session_state.auth = False
     st.rerun()
