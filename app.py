@@ -3,8 +3,7 @@ from datetime import datetime
 import base64
 import os
 
-# --- CONFIGURATION & SÉCURITÉ ---
-PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
+# --- CONFIGURATION ---
 LOGO_FILE = "logo1.png"
 
 st.set_page_config(page_title="HANNA", layout="centered", initial_sidebar_state="collapsed")
@@ -18,14 +17,13 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- ARCHITECTURE CSS (CENTRAGE & DESIGN) ---
+# --- ARCHITECTURE CSS (ÉPURE TOTALE) ---
 st.markdown("""
     <style>
     .block-container { padding-top: 2rem; max-width: 500px; }
     .stApp { background-color: #FFFFFF; }
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
     
-    /* Centrage Absolu avec Flexbox */
     .hanna-header { 
         display: flex; 
         flex-direction: column; 
@@ -45,8 +43,6 @@ st.markdown("""
     .hanna-logo { 
         width: 110px; 
         height: auto;
-        filter: none;
-        opacity: 1;
     }
     
     .hanna-title { 
@@ -57,7 +53,7 @@ st.markdown("""
         color: #1A1A1A; 
         margin: 0;
         line-height: 1.1;
-        padding-left: 12px; /* Correction optique du letter-spacing */
+        padding-left: 12px;
     }
     
     .hanna-sub { 
@@ -70,20 +66,12 @@ st.markdown("""
         margin-top: 8px;
     }
 
-    /* Champs de saisie */
     div[data-baseweb="input"] { 
         border-radius: 12px !important; 
         background: #FFFFFF !important; 
         border: 1px solid #EAEAEA !important; 
     }
     input { text-align: center !important; font-family: 'Inter', sans-serif !important; }
-    
-    /* Boutons */
-    .stButton > button { 
-        width: 100%; border-radius: 8px; border: 1px solid #EEE; 
-        background: white; color: #AAA; font-size: 11px; margin-top: 20px;
-    }
-    .stButton > button:hover { color: #FF4B4B; border-color: #FF4B4B; }
 
     #MainMenu, footer, header { visibility: hidden; height: 0; }
     </style>
@@ -101,7 +89,6 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # --- LOGIQUE DE SESSION ---
-if 'auth' not in st.session_state: st.session_state.auth = False
 if 'notes' not in st.session_state: st.session_state.notes = []
 
 def handle_capture():
@@ -111,29 +98,20 @@ def handle_capture():
         st.session_state.notes.insert(0, {"time": ts, "text": entry})
         st.session_state.entry_input = "" 
 
-# --- ROUTAGE ---
-if not st.session_state.auth:
-    # Page de Connexion
-    pwd = st.text_input("ACCÈS", type="password", placeholder="PASSWORD", label_visibility="collapsed")
-    if pwd == PASSWORD_SYSTEM:
-        st.session_state.auth = True
-        st.rerun()
-    elif pwd:
-        st.caption("<p style='text-align:center; color:#FF4B4B;'>Accès refusé.</p>", unsafe_allow_html=True)
-else:
-    # Page de Capture
-    st.text_input("CAPTURE", placeholder="Échanger avec HANNA...", label_visibility="collapsed", key="entry_input", on_change=handle_capture)
-    
-    st.write("<br>", unsafe_allow_html=True)
-    
-    for note in st.session_state.notes:
-        st.markdown(f"""
-            <div style="padding: 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid #F0F0F0; margin-bottom: 10px;">
-                <span style="color: #007BFF; font-weight: bold; font-size: 12px;">{note['time']}</span>
-                <span style="color: #333; font-size: 14px; margin-left: 10px;">{note['text']}</span>
-            </div>
-        """, unsafe_allow_html=True)
+# --- INTERFACE UNIQUE DE CAPTURE ---
+st.text_input("CAPTURE", 
+              placeholder="Échanger avec HANNA...", 
+              label_visibility="collapsed", 
+              key="entry_input", 
+              on_change=handle_capture)
 
-    if st.button("TERMINER LA SESSION"):
-        st.session_state.clear()
-        st.rerun()
+st.write("<br>", unsafe_allow_html=True)
+
+# Flux des notes
+for note in st.session_state.notes:
+    st.markdown(f"""
+        <div style="padding: 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid #F0F0F0; margin-bottom: 10px;">
+            <span style="color: #007BFF; font-weight: bold; font-size: 11px;">{note['time']}</span>
+            <span style="color: #333; font-size: 14px; margin-left: 10px; font-family: 'Inter', sans-serif;">{note['text']}</span>
+        </div>
+    """, unsafe_allow_html=True)
