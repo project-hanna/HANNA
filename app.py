@@ -6,12 +6,11 @@ import base64
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo1.png"
-PROJECT_NAME = "PROJET HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
 # --- FONCTION DE CENTRAGE ABSOLU ---
-def display_centered_logo(file_path, width_px=60):
+def display_centered_logo(file_path, width_px=120):
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
             data = base64.b64encode(f.read()).decode("utf-8")
@@ -82,7 +81,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
-    # --- PAGE 1 (SANS CHANGEMENT) ---
+    # --- PAGE 1 ---
     st.write("")
     display_centered_logo(LOGO_FILE, 120)
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
@@ -97,12 +96,10 @@ if not st.session_state.auth:
             st.error("Accès refusé.")
     st.stop()
 
-# --- PAGE 2 (DÉSORMAIS HARMONISÉE) ---
-display_centered_logo(LOGO_FILE, 60)
-
-# Titre et sous-titre centrés
-st.markdown(f'<div class="hanna-main-title">{PROJECT_NAME}</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="hanna-sub-title">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
+# --- PAGE 2 (IDENTIQUE À LA PAGE 1) ---
+display_centered_logo(LOGO_FILE, 120)
+st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
+st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
 
 st.divider()
 
