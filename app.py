@@ -82,11 +82,11 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
+    # --- PAGE 1 (SANS CHANGEMENT) ---
     st.write("")
     display_centered_logo(LOGO_FILE, 120)
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-    # RETOUR AU TEXTE D'ORIGINE ICI
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
     pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
@@ -99,11 +99,12 @@ if not st.session_state.auth:
             st.error("Accès refusé.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE ---
+# --- PAGE 2 (HARMONISÉE SUR LA PAGE 1) ---
 display_centered_logo(LOGO_FILE, 60)
 
-st.markdown(f'<div class="hanna-main-title" style="font-size:22px; letter-spacing:4px; margin-top:0px;">{PROJECT_NAME}</div>', unsafe_allow_html=True)
-st.markdown(f'<div class="hanna-sub-title" style="margin-bottom:10px;">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
+# Titre et sous-titre désormais centrés et identiques à l'accueil
+st.markdown(f'<div class="hanna-main-title">{PROJECT_NAME}</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="hanna-sub-title">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
 
 st.divider()
 
