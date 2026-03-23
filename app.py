@@ -17,10 +17,10 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 2. ARCHITECTURE CSS (CENTRAGE TOTAL & SUPPRESSION UI) ---
+# --- 2. ARCHITECTURE CSS (CENTRAGE TOTAL & MINIMALISME) ---
 st.markdown(f"""
     <style>
-    /* Force le centrage vertical et horizontal du bloc principal */
+    /* Centrage structurel profond */
     .stMainBlockContainer {{
         display: flex;
         flex-direction: column;
@@ -30,26 +30,26 @@ st.markdown(f"""
     
     .block-container {{
         max-width: 500px !important;
-        padding-top: 2rem;
+        padding-top: 3rem;
         display: flex;
         flex-direction: column;
         align-items: center;
     }}
 
-    /* Header & Logo Centré */
+    /* Header & Logo */
     .hanna-header {{
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         text-align: center;
-        margin-bottom: 2.5rem;
+        margin-bottom: 3rem;
     }}
 
     .hanna-logo {{
-        width: 110px;
+        width: 115px;
         height: auto;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }}
 
     .hanna-title {{
@@ -59,37 +59,31 @@ st.markdown(f"""
         font-size: 42px;
         color: #1A1A1A;
         margin: 0;
-        padding-left: 12px; /* Equilibre le letter-spacing pour un centrage optique */
+        padding-left: 12px;
     }}
 
     .hanna-sub {{
         font-family: 'Inter', sans-serif;
         font-weight: 300;
         font-size: 9px;
-        color: #999;
+        color: #AAA;
         letter-spacing: 1.5px;
         text-transform: uppercase;
-        margin-top: 8px;
+        margin-top: 10px;
     }}
 
-    /* Input & Notes */
+    /* Zone de Capture */
     div[data-baseweb="input"] {{ 
-        border-radius: 12px !important; 
+        border-radius: 14px !important; 
         width: 100% !important;
+        background-color: #FDFDFD !important;
+        border: 1px solid #EEE !important;
     }}
-    input {{ text-align: center !important; }}
+    input {{ text-align: center !important; font-size: 16px !important; color: #333 !important; }}
     
-    .stButton > button {{
-        width: 100%;
-        border-radius: 10px;
-        border: 1px solid #EEE;
-        color: #CCC;
-        font-size: 10px;
-        margin-top: 40px;
-    }}
-
     /* Masquer les éléments natifs Streamlit */
     #MainMenu, footer, header {{ visibility: hidden; height: 0; }}
+    .stDeployButton {{ display:none; }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -104,7 +98,7 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 4. LOGIQUE DE CAPTURE (SANS CONNEXION) ---
+# --- 4. LOGIQUE DE CAPTURE ---
 if 'notes' not in st.session_state: 
     st.session_state.notes = []
 
@@ -112,25 +106,21 @@ def handle_capture():
     entry = st.session_state.get('entry_input', '').strip()
     if entry:
         ts = datetime.now().strftime("%H:%M")
+        # Insertion en haut de liste
         st.session_state.notes.insert(0, {"time": ts, "text": entry})
         st.session_state.entry_input = "" 
 
-# Zone de saisie directe
-st.text_input("CAPTURE", placeholder="Capturez une idée ou une commande...", 
+# Champ de saisie unique
+st.text_input("CAPTURE", placeholder="Capturer l'instant...", 
               label_visibility="collapsed", key="entry_input", on_change=handle_capture)
 
 st.write("<br>", unsafe_allow_html=True)
 
-# Affichage des flux
+# Affichage du flux (Feed)
 for note in st.session_state.notes:
     st.markdown(f"""
-        <div style="padding: 14px; border-radius: 12px; background: #FBFBFB; border: 1px solid #F0F0F0; margin-bottom: 10px; width: 100%; text-align: left;">
-            <span style="color: #007BFF; font-weight: bold; font-size: 11px;">{note['time']}</span>
-            <span style="color: #333; font-size: 14px; margin-left: 10px;">{note['text']}</span>
+        <div style="padding: 15px; border-radius: 12px; background: #FFFFFF; border: 1px solid #F2F2F2; margin-bottom: 12px; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+            <span style="color: #007BFF; font-weight: 600; font-size: 11px; font-family: 'Inter';">{note['time']}</span>
+            <span style="color: #444; font-size: 14px; margin-left: 12px; font-family: 'Inter'; line-height: 1.4;">{note['text']}</span>
         </div>
     """, unsafe_allow_html=True)
-
-# Bouton de reset de session
-if st.button("RÉINITIALISER LA SESSION"):
-    st.session_state.clear()
-    st.rerun()
