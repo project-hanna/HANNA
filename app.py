@@ -9,28 +9,31 @@ PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE DESIGN BLANC & COMPACT (CENTRAGE UNIVERSEL) ---
+# --- STYLE DESIGN BLANC & CENTRAGE ABSOLU ---
 st.markdown("""
     <style>
     .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
     .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
     
-    /* Force le centrage du logo sur PC et Mobile */
-    [data-testid="stImage"] {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-        text-align: center !important;
-    }
-    
-    /* Taille à 50% avec marges automatiques forcées */
-    [data-testid="stImage"] img {
-        width: 50% !important;
-        max-width: 50% !important;
+    /* CENTRAGE UNIVERSEL PC & MOBILE */
+    /* On cible tous les niveaux de conteneurs d'image de Streamlit */
+    [data-testid="stImage"], [data-testid="stVerticalBlock"] > div > div > div > div > img {
+        display: block !important;
         margin-left: auto !important;
         margin-right: auto !important;
-        display: block !important;
+        text-align: center !important;
+    }
+
+    /* Conteneur parent de l'image */
+    div[data-testid="stImage"] {
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    /* Taille forcée à 50% */
+    [data-testid="stImage"] img {
+        width: 50% !important;
+        height: auto !important;
     }
 
     .hanna-main-title { 
@@ -87,6 +90,7 @@ if "auth" not in st.session_state:
 if not st.session_state.auth:
     st.write("")
     if os.path.exists(LOGO_FILE):
+        # Utilisation d'un conteneur explicite pour aider le centrage
         st.image(LOGO_FILE)
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
