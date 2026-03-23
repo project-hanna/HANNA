@@ -8,20 +8,16 @@ LOGO_FILE = "logo2.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ÉLÉGANT & CENTRAGE FORCÉ ---
+# --- STYLE ÉLÉGANT & CENTRAGE ---
 st.markdown("""
     <style>
     .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
-    /* Centrage horizontal du bloc image Streamlit */
+    /* Centrage horizontal du logo */
     [data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
         width: 100% !important;
-    }
-    [data-testid="stImage"] > img {
-        margin-left: auto;
-        margin-right: auto;
     }
     
     /* Titre HANNA : Espacement large */
@@ -32,9 +28,8 @@ st.markdown("""
         font-size: 32px; 
         text-align: center; 
         color: #000000;
-        margin-top: 20px;
+        margin-top: 10px;
         margin-bottom: 5px;
-        width: 100%;
     }
     
     /* Sous-titre complet */
@@ -46,10 +41,9 @@ st.markdown("""
         letter-spacing: 1.5px;
         margin-bottom: 40px;
         text-transform: uppercase;
-        width: 100%;
     }
 
-    /* Input et Boutons centrés */
+    /* Input et Boutons */
     div.stTextInput > div > div > input {
         text-align: center;
         border: 1px solid #eeeeee !important;
@@ -80,10 +74,9 @@ if "auth" not in st.session_state:
 
 if not st.session_state.auth:
     st.write("")
-    st.write("")
     
-    # Affichage du logo via une colonne centrée (sécurité supplémentaire)
-    col1, col2, col3 = st.columns([1, 2, 1])
+    # Utilisation de colonnes pour forcer le logo à 50% de la largeur centrale
+    col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if os.path.exists(LOGO_FILE):
             st.image(LOGO_FILE, use_container_width=True)
