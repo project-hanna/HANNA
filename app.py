@@ -1,4 +1,4 @@
-import streamlit as st
+import streamlit st
 from datetime import datetime
 import os
 
@@ -8,67 +8,66 @@ LOGO_FILE = "logo2.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ULTRA-COMPACT & RAFFINÉ ---
+# --- STYLE MICRO-TYPOGRAPHIE ---
 st.markdown("""
     <style>
-    /* Nettoyage des marges Streamlit */
-    .block-container { padding-top: 1.5rem !important; max-width: 350px !important; }
+    /* Suppression des marges pour un bloc compact */
+    .block-container { padding-top: 1.5rem !important; max-width: 320px !important; }
     .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
-    /* Logo centré et discret */
-    [data-testid="stImage"] { display: flex !important; justify-content: center !important; margin-bottom: -10px !important; }
+    /* Logo centré */
+    [data-testid="stImage"] { display: flex !important; justify-content: center !important; margin-bottom: -15px !important; }
     
-    /* Titre HANNA : Épuré */
+    /* Titre HANNA */
     .hanna-main-title { 
-        font-weight: 200; 
-        letter-spacing: 14px; 
+        font-weight: 100; 
+        letter-spacing: 16px; 
         text-transform: uppercase; 
-        font-size: 24px; 
+        font-size: 20px; 
         text-align: center; 
         color: #000000;
         margin-bottom: 2px;
     }
     
-    /* Sous-titre : Micro-typographie */
+    /* Sous-titre micro */
     .hanna-sub-title {
         font-weight: 300;
-        font-size: 9px;
+        font-size: 8px;
         text-align: center;
-        color: #bbbbbb;
-        letter-spacing: 1px;
+        color: #cccccc;
+        letter-spacing: 0.8px;
         margin-bottom: 25px;
         text-transform: uppercase;
     }
 
-    /* Champ de saisie : Finition "Soft" */
+    /* Champ de saisie : Très fin */
     div.stTextInput > div > div > input {
         text-align: center;
-        border: 1px solid #f2f2f2 !important;
-        border-radius: 2px !important;
-        height: 35px !important;
-        font-size: 10px !important;
+        border: 1px solid #f5f5f5 !important;
+        border-radius: 0px !important;
+        height: 30px !important;
+        font-size: 9px !important;
         letter-spacing: 2px !important;
         text-transform: uppercase;
-        background-color: #fafafa !important;
-        color: #000 !important;
+        background-color: #ffffff !important;
     }
     
-    /* Bouton AUTHORIZE : Petit, Fin et Élégant */
+    /* Bouton AUTHORIZE : Le plus fin possible */
     .stButton > button {
-        width: 100%;
-        background-color: #000000;
-        color: #ffffff;
-        border: none;
-        font-weight: 200; /* Plus fin */
-        letter-spacing: 4px; /* Plus d'espace entre les lettres */
-        font-size: 9px !important; /* Taille très réduite */
-        height: 32px !important; /* Plus fin en hauteur */
-        border-radius: 2px;
-        margin-top: -12px;
-        text-transform: uppercase;
-        transition: 0.4s;
+        width: 100% !important;
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: none !important;
+        font-weight: 200 !important; 
+        letter-spacing: 6px !important; /* Espacement extrême pour l'élégance */
+        font-size: 7.5px !important; /* Taille minuscule pour le chic */
+        height: 28px !important; /* Hauteur très fine */
+        border-radius: 0px !important;
+        margin-top: -15px !important;
+        text-transform: uppercase !important;
+        transition: 0.5s;
     }
-    .stButton > button:hover { background-color: #444444; color: #ffffff; }
+    .stButton > button:hover { background-color: #555555 !important; }
 
     /* Masquage interface Streamlit */
     #MainMenu, footer, header { visibility: hidden; }
@@ -80,7 +79,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
-    col1, col2, col3 = st.columns([1, 1.2, 1])
+    col1, col2, col3 = st.columns([1, 1.1, 1])
     with col2:
         if os.path.exists(LOGO_FILE):
             st.image(LOGO_FILE, use_container_width=True)
@@ -90,35 +89,34 @@ if not st.session_state.auth:
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
-    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
+    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER CODE")
     
     if st.button("AUTHORIZE"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
         else:
-            st.error("ACCESS DENIED")
+            st.error("DENIED")
     st.stop()
 
 # --- INTERFACE PRINCIPALE ---
-st.markdown('<div style="font-weight:200; letter-spacing:5px; font-size:18px;">HANNA</div>', unsafe_allow_html=True)
-st.caption(f"System Ready | {datetime.now().strftime('%H:%M')}")
+st.markdown('<div style="font-weight:100; letter-spacing:5px; font-size:16px;">HANNA</div>', unsafe_allow_html=True)
 st.divider()
 
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
-with st.expander("NEW DATA ENTRY", expanded=True):
-    new_note = st.text_input("Capture:", key="main_input", placeholder="..." )
-    if st.button("SYNCHRONIZE"):
+with st.expander("ENTRY", expanded=True):
+    new_note = st.text_input("Data:", key="main_input", placeholder="..." )
+    if st.button("SYNC"):
         if new_note:
             st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
-            st.success("Synchronized.")
+            st.success("OK")
 
 if st.session_state.notes:
     for n in reversed(st.session_state.notes):
         st.info(n)
 
-if st.button("TERMINATE SESSION"):
+if st.button("EXIT"):
     st.session_state.auth = False
     st.rerun()
