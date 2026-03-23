@@ -15,7 +15,7 @@ def get_base64_logo(file_path):
     return ""
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- CSS BDD 8.8 (CURSEUR GAUCHE) ---
+# --- CSS BDD 8.8 (HAUTEUR AJUSTÉE À 60PX) ---
 st.markdown(f"""
     <style>
     .main .block-container {{
@@ -33,7 +33,8 @@ st.markdown(f"""
     div.stTextInput input {{ 
         text-align: left !important; padding: 0 20px !important;
         border-radius: 12px !important; border: 1px solid #EEE !important;
-        height: 50px !important; width: 100% !important;
+        height: 60px !important; /* HAUTEUR PASSÉE À 60PX */
+        width: 100% !important;
     }}
     ::placeholder {{ text-align: left !important; }}
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
