@@ -1,123 +1,94 @@
 import streamlit as st
 from datetime import datetime
+import base64
 import os
 
-# --- CONFIGURATION SÉCURISÉE ---
+# --- CONFIGURATION & CACHE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
-LOGO_FILE = "logo2.png"
+LOGO_FILE = "logo1.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ÉLÉGANT & CENTRAGE ABSOLU ---
-st.markdown("""
+@st.cache_data
+def get_ui_elements(file_path):
+    """Chargement unique du logo en mémoire."""
+    logo_b64 = ""
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as f:
+            logo_b64 = base64.b64encode(f.read()).decode()
+    return logo_b64
+
+LOGO_B64 = get_ui_elements(LOGO_FILE)
+
+# --- ARCHITECTURE CSS HARMONISÉE ---
+st.markdown(f"""
     <style>
-    .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
+    .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
+    .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    .stImage {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-    }
-    .stImage > div {
-        display: flex !important;
-        justify-content: center !important;
-    }
-    
-    /* TITRE HANNA : Taille augmentée (42px) */
-    .hanna-main-title { 
-        font-weight: 200; 
-        letter-spacing: 15px; 
-        text-transform: uppercase; 
-        font-size: clamp(32px, 8vw, 42px); 
-        text-align: center; 
-        color: #000000;
-        margin-top: 25px;
-        margin-bottom: 0px;
-        width: 100%;
-    }
-    
-    /* SOUS-TITRE : Taille réduite (9px) et plus discret */
-    .hanna-sub-title {
-        font-weight: 300;
-        font-size: clamp(8px, 2vw, 9px);
-        text-align: center;
-        color: #aaaaaa;
-        letter-spacing: 2px;
-        margin-bottom: 45px;
-        text-transform: uppercase;
-        width: 100%;
-    }
+    /* Header Central */
+    .hanna-header {{ text-align: center; margin-bottom: 1.5rem; }}
+    .hanna-logo {{ width: 120px; margin-bottom: 10px; }}
+    .hanna-title {{ font-weight: 200; letter-spacing: 10px; font-size: 28px; color: #000; text-transform: uppercase; margin: 0; }}
+    .hanna-sub {{ font-weight: 300; font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }}
 
-    div.stTextInput > div > div > input {
-        text-align: center;
-        border: 1px solid #eeeeee !important;
-        border-radius: 4px !important;
-        height: 45px;
-    }
-    
-    .stButton > button {
-        width: 100%;
-        background-color: #000000;
-        color: #ffffff;
-        border: none;
-        font-weight: 300;
-        letter-spacing: 2px;
-        height: 45px;
-        border-radius: 4px;
-    }
-    .stButton > button:hover { background-color: #222222; }
+    /* Inputs Design Centré */
+    div.stTextInput > div > div > input {{ 
+        text-align: center !important; 
+        border-radius: 8px; 
+        height: 45px; 
+        border: 1px solid #eee; 
+        background: #fafafa; 
+    }}
 
-    #MainMenu, footer, header { visibility: hidden; }
+    /* Bouton Quitter Discret */
+    .stButton > button {{ width: 100%; background: transparent; color: #ccc; border: 1px solid #eee; font-size: 10px; letter-spacing: 1px; height: 35px; transition: 0.3s; }}
+    .stButton > button:hover {{ color: #000; border-color: #000; }}
+
+    #MainMenu, footer, header {{ visibility: hidden; }}
     </style>
-    """, unsafe_allow_html=True)
+    
+    <div class="hanna-header">
+        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        <p class="hanna-title">HANNA</p>
+        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
+    </div>
+""", unsafe_allow_html=True)
 
-# --- LOGIQUE D'ACCÈS ---
-if "auth" not in st.session_state:
-    st.session_state.auth = False
+# --- INITIALISATION ÉTAT ---
+if 'auth' not in st.session_state: st.session_state.auth = False
+if 'notes' not in st.session_state: st.session_state.notes = []
 
+# --- MOTEUR DE CAPTURE ---
+def process_entry():
+    if st.session_state.get('entry'):
+        ts = datetime.now().strftime("%H:%M")
+        st.session_state.notes.append(f"[{ts}] {st.session_state.entry}")
+        st.session_state.entry = "" 
+
+# --- LOGIQUE DE ROUTAGE ---
 if not st.session_state.auth:
-    st.write("")
-    st.write("")
-    
-    if os.path.exists(LOGO_FILE):
-        st.image(LOGO_FILE, width=160)
-    else:
-        st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
-
-    # Affichage des titres avec le nouveau contraste de taille
-    st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-    st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
-    
-    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
-    
-    if st.button("AUTHORIZE"):
+    # Page Connexion
+    pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
+    if pwd:
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
         else:
-            st.error("Invalid credentials.")
+            st.error("Accès refusé.")
     st.stop()
+else:
+    # Page Principale
+    st.divider()
+    st.text_input("CAPTURE", label_visibility="collapsed", placeholder="Demandez à HANNA", 
+                  key="entry", on_change=process_entry)
 
-# --- INTERFACE PRINCIPALE ---
-st.markdown('<div style="font-weight:200; letter-spacing:5px; font-size:20px;">HANNA</div>', unsafe_allow_html=True)
-st.caption(f"Network Assistant | System Ready | {datetime.now().strftime('%H:%M')}")
-st.divider()
+    # Affichage des notes
+    if st.session_state.notes:
+        for note in reversed(st.session_state.notes):
+            st.info(note)
 
-if 'notes' not in st.session_state:
-    st.session_state.notes = []
-
-with st.expander("NEW DATA ENTRY", expanded=True):
-    new_note = st.text_input("Capture:", key="main_input", placeholder="...")
-    if st.button("SYNCHRONIZE"):
-        if new_note:
-            st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
-            st.success("Entry recorded.")
-
-if st.session_state.notes:
-    for n in reversed(st.session_state.notes):
-        st.info(n)
-
-if st.button("TERMINATE SESSION"):
-    st.session_state.auth = False
-    st.rerun()
+    st.write("---")
+    if st.button("QUITTER LA SESSION"):
+        st.session_state.clear()
+        st.rerun()
