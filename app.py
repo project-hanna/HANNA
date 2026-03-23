@@ -88,37 +88,4 @@ if not st.session_state.auth:
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
     pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
-    if st.button("ENTRER"):
-        if pwd == PASSWORD_SYSTEM:
-            st.session_state.auth = True
-            st.rerun()
-        else:
-            st.error("Accès refusé.")
-    st.stop()
-
-# --- PAGE 2 (IDENTIQUE À LA PAGE 1) ---
-display_centered_logo(LOGO_FILE, 120)
-st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
-
-st.divider()
-
-if 'notes' not in st.session_state:
-    st.session_state.notes = []
-
-# Modification du placeholder ici
-new_note = st.text_input("CAPTURE :", label_visibility="collapsed", placeholder="Demandez à HANNA")
-
-if st.button("SYNCHRONISER"):
-    if new_note:
-        st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
-        st.rerun()
-
-if st.session_state.notes:
-    for n in reversed(st.session_state.notes):
-        st.info(n)
-
-st.write("")
-if st.button("QUITTER LA SESSION"):
-    st.session_state.auth = False
-    st.rerun()
+    if st
