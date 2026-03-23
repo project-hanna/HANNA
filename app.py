@@ -4,7 +4,7 @@ import os
 
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
-LOGO_FILE = "logo1.png"
+LOGO_FILE = "logo2.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
@@ -68,7 +68,7 @@ st.markdown("""
         height: 45px;
         border-radius: 4px;
     }
-    .stButton > button:hover { background-color: #222222; color: #ffffff; }
+    .stButton > button:hover { background-color: #222222; }
 
     /* Masquage interface Streamlit */
     #MainMenu, footer, header { visibility: hidden; }
@@ -80,15 +80,17 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
+    # Espacement pour descendre un peu le contenu
     st.write("")
     st.write("")
     
-    # Affichage du logo centré (Page 1)
+    # Bloc central
     if os.path.exists(LOGO_FILE):
         st.image(LOGO_FILE, width=160)
     else:
         st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
 
+    # Titrage Page d'accueil
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
@@ -102,38 +104,25 @@ if not st.session_state.auth:
             st.error("Invalid credentials.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE (Page 2 - MISE EN PAGE IDENTIQUE) ---
-
-# Rappel du Logo (Légèrement réduit pour plus d'espace de travail)
-if os.path.exists(LOGO_FILE):
-    st.image(LOGO_FILE, width=110)
-else:
-    st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
-
-# Rappel du Titre et Sous-titre
-st.markdown('<div class="hanna-main-title" style="font-size:26px; letter-spacing:8px; margin-top:10px;">HANNA</div>', unsafe_allow_html=True)
-st.markdown('<div class="hanna-sub-title" style="margin-bottom:20px;">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
-
+# --- INTERFACE PRINCIPALE (INTÉRIEUR) ---
+st.markdown('<div style="font-weight:200; letter-spacing:5px; font-size:20px;">HANNA</div>', unsafe_allow_html=True)
+st.caption(f"Network Assistant | System Ready | {datetime.now().strftime('%H:%M')}")
 st.divider()
 
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
-# Section de capture de données
 with st.expander("NEW DATA ENTRY", expanded=True):
-    new_note = st.text_input("Capture:", key="main_input", placeholder="Type information here...")
+    new_note = st.text_input("Capture:", key="main_input", placeholder="...")
     if st.button("SYNCHRONIZE"):
         if new_note:
             st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
             st.success("Entry recorded.")
 
-# Affichage des données
 if st.session_state.notes:
     for n in reversed(st.session_state.notes):
         st.info(n)
 
-st.write("")
-# Bouton de sortie
 if st.button("TERMINATE SESSION"):
     st.session_state.auth = False
     st.rerun()
