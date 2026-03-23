@@ -16,7 +16,7 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. CSS BDD8.6 (CENTRAGE TOTAL LOGO + TEXTE + PLACEHOLDER) ---
+# --- 3. CSS BDD8.7 (FORCE-CENTER TOTAL) ---
 st.markdown(f"""
     <style>
     /* Centrage du bloc principal */
@@ -55,32 +55,35 @@ st.markdown(f"""
         font-weight: 200;
         font-size: 52px;
         letter-spacing: 14px; 
-        margin-right: -14px !important; /* Annule l'espace fantôme du letter-spacing */
+        margin-right: -14px !important; 
         text-transform: uppercase;
         line-height: 1;
+        width: 100%;
+        text-align: center;
     }}
 
-    /* --- CORRECTION CENTRAGE INPUT & PLACEHOLDER --- */
+    /* --- CORRECTION ULTIME DU CHAMP DE SAISIE --- */
     div.stTextInput {{
         width: 100% !important;
         max-width: 480px !important;
     }}
 
+    /* Forçage chirurgical de l'input et du placeholder */
     div.stTextInput input {{ 
-        text-align: center !important; /* Centre le texte saisi */
+        text-align: center !important; 
+        padding-left: 0 !important;
+        padding-right: 0 !important;
         border-radius: 12px !important; 
         height: 50px !important;
+        width: 100% !important;
     }}
 
-    /* Force le centrage du placeholder (Demandez à HANNA) */
-    div.stTextInput input::placeholder {{
-        text-align: center !important;
-    }}
-    
-    /* Correction spécifique pour certains navigateurs (WebKit/Blink) */
-    div.stTextInput input::-webkit-input-placeholder {{
-        text-align: center !important;
-    }}
+    /* Forçage spécifique du placeholder pour TOUS les navigateurs */
+    ::placeholder {{ text-align: center !important; opacity: 1; }}
+    :-ms-input-placeholder {{ text-align: center !important; }}
+    ::-ms-input-placeholder {{ text-align: center !important; }}
+    ::-webkit-input-placeholder {{ text-align: center !important; }}
+    ::-moz-placeholder {{ text-align: center !important; }}
 
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     </style>
@@ -101,7 +104,7 @@ st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
-        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
+        <p style="font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px; margin-right: -2.5px;">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -115,7 +118,7 @@ st.write("<br>", unsafe_allow_html=True)
 
 for note in st.session_state.notes:
     st.markdown(f"""
-        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; text-align: left;">
+        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; text-align: left; width: 100%;">
             <small style="color: #007BFF; font-weight: 800;">{note['time']}</small><br>{note['text']}
         </div>
     """, unsafe_allow_html=True)
