@@ -106,7 +106,9 @@ st.divider()
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
-new_note = st.text_input("CAPTURE :", label_visibility="collapsed", placeholder="Saisir une information...")
+# Modification du placeholder ici
+new_note = st.text_input("CAPTURE :", label_visibility="collapsed", placeholder="Demandez à HANNA")
+
 if st.button("SYNCHRONISER"):
     if new_note:
         st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
