@@ -6,12 +6,15 @@ import os
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo2.png"
 
-# Configuration de base robuste
+# Configuration de base
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ÉLÉGANT ET LISIBLE ---
+# --- STYLE COMPACT & LISIBLE ---
 st.markdown("""
     <style>
+    /* Suppression de l'espace blanc en haut */
+    .block-container { padding-top: 1rem !important; }
+    
     /* Fond blanc et typographie claire */
     .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Segoe UI', sans-serif; }
     
@@ -30,7 +33,7 @@ st.markdown("""
         font-size: 32px; 
         text-align: center; 
         color: #000000;
-        margin-top: 20px;
+        margin-top: 10px;
     }
     
     /* Sous-titre complet */
@@ -53,7 +56,7 @@ st.markdown("""
         height: 45px !important;
     }
     
-    /* Bouton AUTHORIZE Standard et Propre */
+    /* Bouton ENTRER Standard et Propre */
     .stButton>button { 
         width: 100%; 
         background-color: #000000; 
@@ -62,8 +65,13 @@ st.markdown("""
         border: none; 
         font-weight: bold; 
         height: 3em;
-        letter-spacing: 1px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
     }
+    .stButton>button:hover { background-color: #333333; color: #ffffff; }
+    
+    /* Masquage interface Streamlit */
+    #MainMenu, footer, header { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -85,9 +93,9 @@ if not st.session_state.auth:
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
-    pwd = st.text_input("Code d'accès", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
+    pwd = st.text_input("Code d'accès", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     
-    if st.button("AUTHORIZE"):
+    if st.button("ENTRER"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
