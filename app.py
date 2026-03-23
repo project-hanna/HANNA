@@ -3,115 +3,121 @@ from datetime import datetime
 import base64
 import os
 
-# --- CONFIGURATION & CACHE ---
-PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
+# --- CONFIGURATION & SÉCURITÉ ---
+# Optimisation : Utiliser st.secrets pour le mot de passe en production
+PASSWORD_SYSTEM = st.secrets.get("PASSWORD", "mtt.mallee@gmail.C94")
 LOGO_FILE = "logo1.png"
 
-st.set_page_config(page_title="HANNA", layout="centered")
+st.set_page_config(page_title="HANNA", layout="centered", initial_sidebar_state="collapsed")
 
-@st.cache_data
-def get_ui_elements(file_path):
-    """Chargement unique du logo en mémoire."""
-    logo_b64 = ""
+@st.cache_data(show_spinner=False)
+def get_base64_logo(file_path):
+    """Mise en cache optimisée du logo."""
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
-            logo_b64 = base64.b64encode(f.read()).decode()
-    return logo_b64
+            return base64.b64encode(f.read()).decode()
+    return ""
 
-LOGO_B64 = get_ui_elements(LOGO_FILE)
+LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- ARCHITECTURE CSS OPTIMISÉE ---
+# --- CSS ARCHITECTURE BDD7.1 (ULTRA-CLEAN) ---
+# Optimisation : Regroupement des styles et suppression du surplus
 st.markdown(f"""
     <style>
-    .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
-    .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
+    /* Reset & Container */
+    .block-container {{ padding-top: 2rem; max-width: 500px; }}
+    .stApp {{ background-color: #FFFFFF; }}
     
-    /* Header Harmonisé */
-    .hanna-header {{ text-align: center; margin-bottom: 1.5rem; }}
-    .hanna-logo {{ width: 120px; margin-bottom: 5px; }}
+    /* Typography Premium */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
     
-    /* TITRE XXL */
+    .hanna-header {{ text-align: center; margin-bottom: 2rem; pointer-events: none; }}
+    .hanna-logo {{ width: 100px; filter: grayscale(100%); opacity: 0.9; transition: 0.5s; }}
+    
     .hanna-title {{ 
+        font-family: 'Inter', sans-serif;
         font-weight: 200; 
-        letter-spacing: 14px; 
-        font-size: 52px; 
+        letter-spacing: 12px; 
+        font-size: clamp(30px, 10vw, 52px); 
         color: #000; 
-        text-transform: uppercase; 
-        margin: 0; 
-        line-height: 1.1;
+        margin: 10px 0 0 0;
+        line-height: 1;
     }}
     
-    /* SOUS-TITRE RÉDUIT (8px) */
     .hanna-sub {{ 
+        font-family: 'Inter', sans-serif;
         font-weight: 300; 
-        font-size: 8px; 
-        color: #999; 
-        letter-spacing: 2px; 
-        text-transform: uppercase; 
-        margin-top: 5px;
+        font-size: 9px; 
+        color: #AAA; 
+        letter-spacing: 1.5px; 
+        text-transform: uppercase;
+        margin-top: 8px;
     }}
 
-    /* Inputs Design */
-    div.stTextInput > div > div > input {{ text-align: center; border-radius: 8px; height: 45px; border: 1px solid #eee; background: #fafafa; }}
+    /* Inputs & UI Components */
+    div[data-baseweb="input"] {{ border-radius: 12px !important; background: #F8F9FA !important; border: 1px solid #F0F0F0 !important; }}
+    input {{ text-align: center !important; font-family: 'Inter', sans-serif !important; }}
     
-    /* DÉPLACEMENT DU BOUTON SHOW PASSWORD À GAUCHE */
-    div[data-baseweb="input"] > div {{
-        flex-direction: row-reverse !important;
-    }}
-    div[data-baseweb="input"] button {{
-        margin-left: 10px !important;
-        margin-right: 0 !important;
-    }}
-
     /* Bouton Quitter Discret */
-    .stButton > button {{ width: 100%; background: transparent; color: #ccc; border: 1px solid #eee; font-size: 10px; letter-spacing: 1px; height: 35px; transition: 0.3s; }}
-    .stButton > button:hover {{ color: #000; border-color: #000; }}
+    .stButton > button {{ 
+        width: 100%; border-radius: 8px; border: 1px solid #F0F0F0; 
+        background: white; color: #BBB; font-size: 11px; transition: 0.2s;
+    }}
+    .stButton > button:hover {{ color: #000; border-color: #000; background: #FAFAFA; }}
 
-    #MainMenu, footer, header {{ visibility: hidden; }}
+    /* Masquage des éléments natifs Streamlit */
+    #MainMenu, footer, header {{ visibility: hidden; height: 0; }}
     </style>
     
     <div class="hanna-header">
-        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
-        <br><br>
-        <p class="hanna-title">HANNA</p>
+        {"<img src='data:image/png;base64," + LOGO_B64 + "' class='hanna-logo'>" if LOGO_B64 else ""}
+        <h1 class="hanna-title">HANNA</h1>
         <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
 """, unsafe_allow_html=True)
 
-# --- INITIALISATION ÉTAT ---
+# --- GESTION DE L'ÉTAT (SESSION STATE) ---
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'notes' not in st.session_state: st.session_state.notes = []
 
-# --- MOTEUR DE CAPTURE ---
-def process_entry():
-    if st.session_state.get('entry'):
+# --- LOGIQUE MÉTIER ---
+def handle_capture():
+    """Traitement de l'entrée utilisateur avec nettoyage."""
+    entry = st.session_state.get('entry_input', '').strip()
+    if entry:
         ts = datetime.now().strftime("%H:%M")
-        st.session_state.notes.append(f"[{ts}] {st.session_state.entry}")
-        st.session_state.entry = "" 
+        st.session_state.notes.insert(0, f"**{ts}** • {entry}") # Insert au début pour éviter le reversed()
+        st.session_state.entry_input = "" 
 
-# --- LOGIQUE DE ROUTAGE ---
+# --- ROUTAGE DES PAGES ---
 if not st.session_state.auth:
-    # Page Connexion
-    pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
-    if pwd:
+    # Zone de Connexion
+    with st.container():
+        pwd = st.text_input("ACCÈS", type="password", placeholder="PASSWORD", label_visibility="collapsed")
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
-        else:
-            st.error("Accès refusé.")
-    st.stop()
+        elif pwd:
+            st.caption("Identifiant invalide.")
 else:
-    # Page Principale
-    st.divider()
-    st.text_input("CAPTURE", label_visibility="collapsed", placeholder="Demandez à HANNA", 
-                  key="entry", on_change=process_entry)
+    # Interface de Capture
+    st.text_input("CAPTURE", 
+                  placeholder="Échanger avec HANNA...", 
+                  label_visibility="collapsed",
+                  key="entry_input", 
+                  on_change=handle_capture)
 
-    # Affichage des notes
-    if st.session_state.notes:
-        for note in reversed(st.session_state.notes):
-            st.info(note)
+    # Affichage des flux (Optimisé)
+    for note in st.session_state.notes:
+        st.markdown(f"""
+            <div style="padding: 12px; border-radius: 10px; background: #FBFBFB; 
+            border-left: 2px solid #EEE; margin-bottom: 8px; font-size: 14px; color: #333;">
+                {note}
+            </div>
+        """, unsafe_allow_html=True)
 
-    st.write("---")
-    if st.button("QUITTER LA SESSION"):
+    # Footer Action
+    st.write("<br>" * 2, unsafe_allow_html=True)
+    if st.button("TERMINER LA SESSION"):
         st.session_state.clear()
         st.rerun()
