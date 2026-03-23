@@ -16,10 +16,10 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.5 + CORRECTIF CENTRAGE PLACEHOLDER ---
+# --- 3. ARCHITECTURE CSS BDD8.5 + CORRECTIF CIBLÉ PLACEHOLDER ---
 st.markdown(f"""
     <style>
-    /* Neutralisation des marges Streamlit pour le centrage horizontal */
+    /* Structure de base BDD8.5 */
     .main .block-container {{
         max-width: 550px !important;
         padding: 4rem 1rem !important;
@@ -30,13 +30,11 @@ st.markdown(f"""
         justify-content: flex-start !important;
     }}
 
-    /* Forcer l'alignement central de tous les composants injectés */
     [data-testid="stVerticalBlock"] {{
         align-items: center !important;
         width: 100% !important;
     }}
 
-    /* Header HANNA - Alignement Géométrique */
     .hanna-header {{
         width: 100% !important;
         display: flex !important;
@@ -78,19 +76,21 @@ st.markdown(f"""
         margin-right: -2.5px !important;
     }}
 
-    /* --- FORCE LE CENTRAGE DE 'DEMANDEZ À HANNA' (PLACEHOLDER) --- */
+    /* --- SEULE MODIFICATION : CENTRAGE FORCÉ DU PLACEHOLDER --- */
     div.stTextInput {{ width: 100% !important; max-width: 480px !important; }}
+    
     div.stTextInput input {{ 
-        text-align: center !important; 
+        text-align: center !important; /* Centre le texte saisi */
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
         height: 50px !important;
         background: #FDFDFD !important;
     }}
 
-    /* Correction spécifique pour le texte d'invite (Placeholder) */
+    /* Force le centrage du texte 'Demander à HANNA' pour tous les navigateurs */
     div.stTextInput input::placeholder {{
         text-align: center !important;
+        width: 100%;
     }}
     div.stTextInput input::-webkit-input-placeholder {{
         text-align: center !important;
@@ -98,44 +98,4 @@ st.markdown(f"""
     div.stTextInput input::-moz-placeholder {{
         text-align: center !important;
     }}
-
-    /* UI Clean-up */
-    #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
-    </style>
-""", unsafe_allow_html=True)
-
-# --- 4. LOGIQUE DE CAPTURE ---
-if 'notes' not in st.session_state: 
-    st.session_state.notes = []
-
-def handle_capture():
-    entry = st.session_state.get('entry_input', '').strip()
-    if entry:
-        ts = datetime.now().strftime("%H:%M")
-        st.session_state.notes.insert(0, {"time": ts, "text": entry})
-        st.session_state.entry_input = "" 
-
-# --- 5. RENDU INTERFACE ---
-st.markdown(f"""
-    <div class="hanna-header">
-        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
-        <h1 class="hanna-title">HANNA</h1>
-        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
-    </div>
-""", unsafe_allow_html=True)
-
-st.text_input("CAPTURE", 
-              placeholder="Demandez à HANNA", 
-              label_visibility="collapsed", 
-              key="entry_input", 
-              on_change=handle_capture)
-
-st.write("<br>", unsafe_allow_html=True)
-
-for note in st.session_state.notes:
-    st.markdown(f"""
-        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
-            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
-            <span style="color: #222; font-size: 15px; font-family: 'Inter'; line-height: 1.5;">{note['text']}</span>
-        </div>
-    """, unsafe_allow_html=True)
+    div.stTextInput input:-ms-input-
