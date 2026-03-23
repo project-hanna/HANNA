@@ -19,67 +19,81 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS (CENTRAGE & STYLE) ---
+# --- 3. ARCHITECTURE CSS (CENTRAGE FORCÉ) ---
 st.markdown("""
     <style>
+    /* Force le centrage de tous les blocs Streamlit */
+    [data-testid="stVerticalBlock"] > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
     .block-container { 
-        padding-top: 2rem; 
-        max-width: 500px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
+        padding-top: 3rem; 
+        max-width: 500px !important; 
     }
     
+    /* Style du Header */
     .hanna-header { 
         width: 100%;
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center;
-        text-align: center; 
-        margin-bottom: 2rem; 
+        text-align: center;
+        margin-bottom: 2rem;
     }
     
     .hanna-logo-wrapper {
         display: flex;
         justify-content: center;
-        width: 100%;
         margin-bottom: 15px;
+        width: 100%;
     }
 
     .hanna-logo { 
-        width: 110px; 
+        width: 120px; 
         height: auto;
     }
     
     .hanna-title { 
         font-family: 'Inter', sans-serif;
         font-weight: 200; 
-        letter-spacing: 12px; 
-        font-size: 42px; 
-        color: #1A1A1A; 
+        letter-spacing: 14px; 
+        font-size: 52px; 
+        color: #000; 
         margin: 0;
         line-height: 1.1;
-        padding-left: 12px;
+        text-transform: uppercase;
+        /* Compensation du letter-spacing pour le centrage visuel */
+        padding-left: 14px; 
     }
     
     .hanna-sub { 
         font-family: 'Inter', sans-serif;
         font-weight: 300; 
-        font-size: 9px; 
+        font-size: 8px; 
         color: #999; 
-        letter-spacing: 1.5px; 
+        letter-spacing: 2px; 
         text-transform: uppercase;
-        margin-top: 8px;
+        margin-top: 10px;
     }
 
-    div[data-baseweb="input"] { border-radius: 12px !important; border: 1px solid #EEE !important; background: #FDFDFD !important; }
-    input { text-align: center !important; font-family: 'Inter', sans-serif !important; }
+    /* Inputs & Boutons */
+    div.stTextInput > div > div > input { 
+        text-align: center !important; 
+        border-radius: 8px; 
+        height: 45px; 
+    }
     
-    .stButton > button { width: 100%; border-radius: 8px; color: #BBB; font-size: 10px; border: 1px solid #F0F0F0; margin-top: 20px; }
-    .stButton > button:hover { color: #000; border-color: #000; }
+    .stButton > button { 
+        width: 100%; 
+        background: transparent; 
+        color: #ccc; 
+        border: 1px solid #eee; 
+        font-size: 10px; 
+    }
 
-    #MainMenu, footer, header { visibility: hidden; height: 0; }
+    #MainMenu, footer, header { visibility: hidden; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -107,28 +121,21 @@ def handle_capture():
 
 # --- 6. ROUTAGE ---
 if not st.session_state.auth:
-    # Page Connexion
     pwd = st.text_input("ACCÈS", type="password", placeholder="CODE D'ACCÈS", label_visibility="collapsed")
     if pwd == PASSWORD_SYSTEM:
         st.session_state.auth = True
         st.rerun()
     elif pwd:
-        st.caption("<p style='text-align:center; color:red;'>Accès refusé.</p>", unsafe_allow_html=True)
+        st.error("Accès refusé.")
 else:
-    # Page de Capture avec l'ancien texte rétabli
-    st.text_input("CAPTURE", 
-                  placeholder="Demandez à HANNA", 
-                  label_visibility="collapsed", 
-                  key="entry_input", 
-                  on_change=handle_capture)
+    st.text_input("CAPTURE", placeholder="Demandez à HANNA", label_visibility="collapsed", key="entry_input", on_change=handle_capture)
     
-    st.write("<br>", unsafe_allow_html=True)
+    st.write("---")
     
     for note in st.session_state.notes:
         st.markdown(f"""
-            <div style="padding: 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid #F0F0F0; margin-bottom: 10px; width: 100%;">
-                <span style="color: #007BFF; font-weight: bold; font-size: 12px;">{note['time']}</span>
-                <span style="color: #333; font-size: 14px; margin-left: 10px;">{note['text']}</span>
+            <div style="padding: 12px; border-radius: 10px; background: #F9F9F9; border: 1px solid #EEE; margin-bottom: 8px; width: 100%; text-align: left;">
+                <small style="color: #007BFF;">{note['time']}</small> <br> {note['text']}
             </div>
         """, unsafe_allow_html=True)
 
