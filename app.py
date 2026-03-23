@@ -4,7 +4,7 @@ import os
 
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
-LOGO_FILE = "logo2.png"
+LOGO_FILE = "logo1.png"
 
 # Configuration de base
 st.set_page_config(page_title="HANNA Terminal", layout="centered")
