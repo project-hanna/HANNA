@@ -20,25 +20,28 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS HARMONISÉE ---
+# --- ARCHITECTURE CSS OPTIMISÉE ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    /* Header Central */
+    /* Header Harmonisé */
     .hanna-header {{ text-align: center; margin-bottom: 1.5rem; }}
     .hanna-logo {{ width: 120px; margin-bottom: 10px; }}
     .hanna-title {{ font-weight: 200; letter-spacing: 10px; font-size: 28px; color: #000; text-transform: uppercase; margin: 0; }}
     .hanna-sub {{ font-weight: 300; font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }}
 
-    /* Inputs Design Centré */
-    div.stTextInput > div > div > input {{ 
-        text-align: center !important; 
-        border-radius: 8px; 
-        height: 45px; 
-        border: 1px solid #eee; 
-        background: #fafafa; 
+    /* Inputs Design */
+    div.stTextInput > div > div > input {{ text-align: center; border-radius: 8px; height: 45px; border: 1px solid #eee; background: #fafafa; }}
+    
+    /* DÉPLACEMENT DU BOUTON SHOW PASSWORD À GAUCHE */
+    div[data-baseweb="input"] > div {{
+        flex-direction: row-reverse !important;
+    }}
+    div[data-baseweb="input"] button {{
+        margin-left: 10px !important;
+        margin-right: 0 !important;
     }}
 
     /* Bouton Quitter Discret */
@@ -68,7 +71,7 @@ def process_entry():
 
 # --- LOGIQUE DE ROUTAGE ---
 if not st.session_state.auth:
-    # Page Connexion
+    # Page Connexion (L'icône sera à gauche ici)
     pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     if pwd:
         if pwd == PASSWORD_SYSTEM:
@@ -76,7 +79,6 @@ if not st.session_state.auth:
             st.rerun()
         else:
             st.error("Accès refusé.")
-    st.stop()
 else:
     # Page Principale
     st.divider()
@@ -84,9 +86,8 @@ else:
                   key="entry", on_change=process_entry)
 
     # Affichage des notes
-    if st.session_state.notes:
-        for note in reversed(st.session_state.notes):
-            st.info(note)
+    for note in reversed(st.session_state.notes):
+        st.info(note)
 
     st.write("---")
     if st.button("QUITTER LA SESSION"):
