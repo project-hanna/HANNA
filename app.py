@@ -19,10 +19,10 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS (CENTRAGE FORCÉ) ---
+# --- 3. ARCHITECTURE CSS (CENTRAGE ABSOLU) ---
 st.markdown("""
     <style>
-    /* Force le centrage de tous les blocs Streamlit */
+    /* 1. Neutraliser les conteneurs Streamlit pour le centrage */
     [data-testid="stVerticalBlock"] > div {
         display: flex;
         flex-direction: column;
@@ -30,24 +30,30 @@ st.markdown("""
         justify-content: center;
         width: 100%;
     }
-
+    
     .block-container { 
         padding-top: 3rem; 
         max-width: 500px !important; 
+        margin: auto;
     }
     
-    /* Style du Header */
+    /* 2. Style du Header */
     .hanna-header { 
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
     }
     
     .hanna-logo-wrapper {
         display: flex;
         justify-content: center;
-        margin-bottom: 15px;
+        align-items: center;
         width: 100%;
+        margin-bottom: 15px;
     }
 
     .hanna-logo { 
@@ -64,8 +70,10 @@ st.markdown("""
         margin: 0;
         line-height: 1.1;
         text-transform: uppercase;
-        /* Compensation du letter-spacing pour le centrage visuel */
+        /* IMPORTANT : Le letter-spacing ajoute de l'espace à DROITE de chaque lettre. 
+           Pour centrer HANNA, on ajoute le même espace à GAUCHE du mot complet. */
         padding-left: 14px; 
+        width: 100%;
     }
     
     .hanna-sub { 
@@ -76,24 +84,14 @@ st.markdown("""
         letter-spacing: 2px; 
         text-transform: uppercase;
         margin-top: 10px;
+        width: 100%;
     }
 
-    /* Inputs & Boutons */
-    div.stTextInput > div > div > input { 
-        text-align: center !important; 
-        border-radius: 8px; 
-        height: 45px; 
-    }
-    
-    .stButton > button { 
-        width: 100%; 
-        background: transparent; 
-        color: #ccc; 
-        border: 1px solid #eee; 
-        font-size: 10px; 
-    }
+    /* 3. Inputs & Boutons */
+    div.stTextInput > div > div > input { text-align: center !important; border-radius: 8px; }
+    .stButton > button { width: 100%; border-radius: 8px; color: #BBB; border: 1px solid #EEE; }
 
-    #MainMenu, footer, header { visibility: hidden; }
+    #MainMenu, footer, header { visibility: hidden; height: 0; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -108,7 +106,7 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 5. LOGIQUE DE SESSION ---
+# --- 5. LOGIQUE ---
 if 'auth' not in st.session_state: st.session_state.auth = False
 if 'notes' not in st.session_state: st.session_state.notes = []
 
@@ -125,17 +123,13 @@ if not st.session_state.auth:
     if pwd == PASSWORD_SYSTEM:
         st.session_state.auth = True
         st.rerun()
-    elif pwd:
-        st.error("Accès refusé.")
 else:
     st.text_input("CAPTURE", placeholder="Demandez à HANNA", label_visibility="collapsed", key="entry_input", on_change=handle_capture)
     
-    st.write("---")
-    
     for note in st.session_state.notes:
         st.markdown(f"""
-            <div style="padding: 12px; border-radius: 10px; background: #F9F9F9; border: 1px solid #EEE; margin-bottom: 8px; width: 100%; text-align: left;">
-                <small style="color: #007BFF;">{note['time']}</small> <br> {note['text']}
+            <div style="padding: 12px; border-radius: 10px; background: #F9F9F9; border: 1px solid #EEE; margin-top: 10px; width: 100%;">
+                <small style="color: #007BFF; font-weight: bold;">{note['time']}</small><br>{note['text']}
             </div>
         """, unsafe_allow_html=True)
 
