@@ -16,7 +16,7 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 (SOUS-TITRE AGRANDI) ---
+# --- 3. ARCHITECTURE CSS BDD8.8 (SOUS-TITRE AGRANDI & CURSEUR GAUCHE) ---
 st.markdown(f"""
     <style>
     .main .block-container {{
@@ -47,6 +47,7 @@ st.markdown(f"""
 
     .hanna-logo {{
         width: 120px !important;
+        height: auto !important;
         margin-bottom: 25px !important;
     }}
 
@@ -62,12 +63,11 @@ st.markdown(f"""
         line-height: 1;
     }}
 
-    /* --- SOUS-TITRE AGRANDI --- */
     .hanna-sub {{
         font-family: 'Inter', sans-serif;
         font-weight: 300;
-        font-size: 13px; /* Augmenté de 9px à 13px */
-        color: #777;    /* Légèrement plus sombre pour la lisibilité */
+        font-size: 13px;
+        color: #777;
         letter-spacing: 3px;
         text-transform: uppercase;
         margin-top: 18px !important;
@@ -113,13 +113,4 @@ def handle_capture():
 # --- 5. RENDU ---
 st.markdown(f"""
     <div class="hanna-header">
-        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
-        <h1 class="hanna-title">HANNA</h1>
-        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
-    </div>
-""", unsafe_allow_html=True)
-
-st.text_input("CAPTURE", 
-              placeholder="Demander à HANNA", 
-              label_visibility="collapsed", 
-              key="entry_input",
+        <img
