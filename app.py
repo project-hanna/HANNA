@@ -16,51 +16,57 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. CSS FORCE-CENTER (CENTRAGE ABSOLU) ---
+# --- 3. CSS FORCE-CENTER (CORRECTION GÉOMÉTRIQUE BDD8.1) ---
 st.markdown(f"""
     <style>
-    /* Centrage du bloc principal */
+    /* 1. Centrage forcé des conteneurs parents Streamlit */
     .main .block-container {{
         max-width: 500px !important;
         padding-top: 2rem !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
+        justify-content: flex-start !important;
     }}
 
-    /* Force le centrage de tous les éléments internes de Streamlit */
-    [data-testid="stVerticalBlock"] > div {{
+    [data-testid="stVerticalBlock"] {{
+        width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: center !important;
-        width: 100% !important;
-        text-align: center !important;
     }}
 
-    /* Header HANNA */
+    /* 2. Header HANNA - Alignement des axes */
     .hanna-header {{
         width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
         text-align: center !important;
-        margin-bottom: 2rem !important;
+        margin-bottom: 2.5rem !important;
     }}
 
     .hanna-logo {{
         width: 120px !important;
-        display: block !important;
-        margin: 0 auto 15px auto !important;
+        height: auto !important;
+        margin-bottom: 15px !important;
     }}
 
     .hanna-title {{
         font-family: 'Inter', sans-serif;
         font-weight: 200;
-        letter-spacing: 14px;
         font-size: 52px;
         color: #000;
         text-transform: uppercase;
         margin: 0 !important;
-        padding-left: 14px; /* Centrage visuel exact */
         line-height: 1.1;
+        
+        /* TECHNIQUE DE CENTRAGE ABSOLU : */
+        letter-spacing: 14px; 
+        margin-right: -14px !important; /* Annule l'espace fantôme après le dernier 'A' */
+        
+        display: inline-block !important;
+        width: auto !important;
     }}
 
     .hanna-sub {{
@@ -70,17 +76,19 @@ st.markdown(f"""
         letter-spacing: 2px;
         text-transform: uppercase;
         margin-top: 10px !important;
+        margin-right: -2px !important; /* Compensation sub */
     }}
 
-    /* Champ Saisie Centré */
+    /* 3. Champ Saisie */
     div.stTextInput {{ width: 100% !important; }}
     div.stTextInput input {{ 
         text-align: center !important; 
         border-radius: 10px !important; 
         border: 1px solid #EEE !important;
+        background: #FDFDFD !important;
     }}
 
-    /* Suppression Header/Footer Streamlit */
+    /* Suppression des éléments parasites */
     #MainMenu, footer, header {{ visibility: hidden; height: 0; }}
     </style>
 """, unsafe_allow_html=True)
@@ -97,7 +105,6 @@ def handle_capture():
         st.session_state.entry_input = "" 
 
 # --- 5. RENDU ---
-# Header
 st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
@@ -106,12 +113,10 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# Input principal
 st.text_input("CAPTURE", placeholder="Demandez à HANNA", label_visibility="collapsed", key="entry_input", on_change=handle_capture)
 
 st.write("<br>", unsafe_allow_html=True)
 
-# Liste des captures
 for note in st.session_state.notes:
     st.markdown(f"""
         <div style="padding: 12px; border-radius: 10px; background: #F9F9F9; border: 1px solid #EEE; margin-bottom: 10px; width: 100%; text-align: left;">
