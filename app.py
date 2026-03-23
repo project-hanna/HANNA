@@ -85,6 +85,15 @@ if "auth" not in st.session_state:
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
+# --- FONCTION DE CAPTURE (CALLBACK) ---
+def handle_capture():
+    val = st.session_state.input_note
+    if val:
+        timestamp = datetime.now().strftime("%H:%M")
+        st.session_state.notes.append(f"[{timestamp}] {val}")
+        # On vide le champ proprement
+        st.session_state.input_note = ""
+
 # --- PAGE DE CONNEXION ---
 if not st.session_state.auth:
     st.write("")
@@ -92,7 +101,6 @@ if not st.session_state.auth:
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
-    # La validation se fait par la touche Entrée
     pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     if pwd:
         if pwd == PASSWORD_SYSTEM:
@@ -109,15 +117,9 @@ st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network As
 
 st.divider()
 
-# Validation par touche Entrée uniquement
-new_note = st.text_input("CAPTURE", label_visibility="collapsed", placeholder="Demandez à HANNA", key="input_note")
-
-if new_note:
-    timestamp = datetime.now().strftime("%H:%M")
-    st.session_state.notes.append(f"[{timestamp}] {new_note}")
-    # Vidage manuel pour éviter les doublons au prochain rerun
-    st.session_state.input_note = ""
-    st.rerun()
+# Utilisation du paramètre on_change pour valider sans bouton
+st.text_input("CAPTURE", label_visibility="collapsed", placeholder="Demandez à HANNA", 
+              key="input_note", on_change=handle_capture)
 
 if st.session_state.notes:
     for n in reversed(st.session_state.notes):
