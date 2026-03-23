@@ -16,7 +16,7 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 (CORRECTIONS D'ALIGNEMENT VERTICAL) ---
+# --- 3. ARCHITECTURE CSS BDD8.8 (MODIFICATION CURSEUR GAUCHE) ---
 st.markdown(f"""
     <style>
     /* Centrage du bloc principal */
@@ -65,7 +65,7 @@ st.markdown(f"""
         line-height: 1;
     }}
 
-    /* CHAMP DE SAISIE : ALIGNEMENT CURSEUR ET TEXTE */
+    /* CHAMP DE SAISIE */
     div.stTextInput {{
         width: 100% !important;
         max-width: 480px !important;
@@ -73,29 +73,18 @@ st.markdown(f"""
     }}
     
     div.stTextInput input {{ 
-        text-align: center !important; 
+        text-align: left !important; /* CURSEUR À GAUCHE */
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
-        background: #FDFDFD !important;
-        
-        /* Correction de l'alignement vertical */
         height: 50px !important;
-        line-height: 50px !important; /* Force le curseur au milieu de la hauteur */
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        display: flex !important;
-        align-items: center !important;
+        width: 100% !important;
+        padding: 0 20px !important; /* Ajout d'une marge interne gauche pour la lisibilité */
     }}
 
-    /* Placeholder */
-    ::placeholder {{ 
-        text-align: center !important; 
-        line-height: 50px !important; 
-    }}
-    ::-webkit-input-placeholder {{ 
-        text-align: center !important; 
-        line-height: 50px !important; 
-    }}
+    /* Placeholder à gauche */
+    ::placeholder {{ text-align: left !important; }}
+    ::-webkit-input-placeholder {{ text-align: left !important; }}
+    ::-moz-placeholder {{ text-align: left !important; }}
 
     /* Nettoyage UI */
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
@@ -134,6 +123,4 @@ for note in st.session_state.notes:
     st.markdown(f"""
         <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
             <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
-            <span style="color: #222; font-size: 15px;">{note['text']}</span>
-        </div>
-    """, unsafe_allow_html=True)
+            <span style="color: #222; font-size: 1
