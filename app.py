@@ -72,6 +72,18 @@ st.markdown("""
     }
     div.stTextInput > div > div > input:focus { border-color: #000000 !important; box-shadow: none !important; }
     
+    /* POSITIONNEMENT DU BOUTON DE MOT DE PASSE À GAUCHE */
+    /* On force le conteneur du bouton à se mettre à gauche avec flex-direction: row-reverse */
+    div[data-testid="stTextInput"] > div[data-baseweb="input"] > div {
+        flex-direction: row-reverse !important;
+    }
+
+    /* Ajustement du bouton lui-même */
+    div[data-testid="stTextInput"] > div[data-baseweb="input"] > div > div:last-child {
+        margin-right: 10px !important; /* Espacement à droite de l'icône */
+        margin-left: 0 !important;
+    }
+
     .stButton > button {
         width: 100% !important;
         background-color: #000000 !important;
@@ -110,6 +122,7 @@ if not st.session_state.auth:
     st.write("")
     draw_header()
     
+    # Champ mot de passe - L'icône sera à gauche grâce au CSS
     pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     if st.button("ENTRER", key="login_btn"):
         if pwd == PASSWORD_SYSTEM:
