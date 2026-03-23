@@ -1,26 +1,35 @@
 import streamlit as st
 from datetime import datetime
 import os
+import base64
 
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
-LOGO_FILE = "logo2.png"
+LOGO_FILE = "logo1.png" # Mis à jour selon BDD3
 PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE DESIGN BLANC & COMPACT (GLOBAL) ---
+# --- FONCTION DE CENTRAGE ABSOLU (Pour le test) ---
+def display_centered_logo(file_path, width_px=60):
+    if os.path.exists(file_path):
+        with open(file_path, "rb") as f:
+            data = base64.b64encode(f.read()).decode("utf-8")
+        st.markdown(
+            f"""
+            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 10px;">
+                <img src="data:image/png;base64,{data}" style="width: {width_px}px; height: auto;">
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+# --- STYLE DESIGN BLANC & COMPACT ---
 st.markdown("""
     <style>
     .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
     .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
     
-    [data-testid="stImage"] {
-        display: flex !important;
-        justify-content: center !important;
-        width: 100% !important;
-    }
-
     .hanna-main-title { 
         font-weight: 200; 
         letter-spacing: 10px; 
@@ -64,11 +73,6 @@ st.markdown("""
     }
     .stButton > button:hover { background-color: #333333 !important; }
 
-    .stAlert {
-        background-color: #f8f9fa !important;
-        border-left: 2px solid #000 !important;
-    }
-
     #MainMenu, footer, header { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
@@ -79,10 +83,7 @@ if "auth" not in st.session_state:
 
 if not st.session_state.auth:
     st.write("")
-    col1, col2, col3 = st.columns([1, 1.5, 1])
-    with col2:
-        if os.path.exists(LOGO_FILE):
-            st.image(LOGO_FILE, use_container_width=True)
+    display_centered_logo(LOGO_FILE, 120) # Plus grand pour l'accueil
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="hanna-sub-title">{PROJECT_NAME} | ACCÈS SÉCURISÉ</div>', unsafe_allow_html=True)
@@ -97,10 +98,8 @@ if not st.session_state.auth:
             st.error("Accès refusé.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE (MODIFIÉE POUR LE CENTRAGE) ---
-# Bloc Logo Centré
-if os.path.exists(LOGO_FILE):
-    st.image(LOGO_FILE, width=60)
+# --- INTERFACE PRINCIPALE ---
+display_centered_logo(LOGO_FILE, 60) # 60px comme demandé dans BDD3
 
 st.markdown(f'<div class="hanna-main-title" style="font-size:22px; letter-spacing:4px; margin-top:0px;">{PROJECT_NAME}</div>', unsafe_allow_html=True)
 st.markdown(f'<div class="hanna-sub-title" style="margin-bottom:10px;">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
