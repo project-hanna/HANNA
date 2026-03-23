@@ -4,18 +4,18 @@ from datetime import datetime
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 
-# Configuration ultra-simple
+# Configuration de base
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE MINIMALISTE ---
+# --- STYLE CORRIGÉ (unsafe_allow_html=True) ---
 st.markdown("""
     <style>
     .stApp { background-color: #0e1117; color: #00ff41; font-family: monospace; }
     h1 { color: #00ff41 !important; text-align: center; }
-    .stTextInput>div>div>input { background-color: #1a1c24; color: #00ff41; border: 1px solid #00ff41; }
-    .stButton>button { width: 100%; background-color: #00ff41; color: #0e1117; font-weight: bold; }
+    input { background-color: #1a1c24 !important; color: #00ff41 !important; border: 1px solid #00ff41 !important; }
+    .stButton>button { width: 100%; background-color: #00ff41; color: #0e1117; font-weight: bold; border: none; }
     </style>
-    """, unsafe_allow_index=True)
+    """, unsafe_allow_html=True) # <-- CORRECTION ICI
 
 # --- LOGIQUE D'ACCÈS ---
 if "auth" not in st.session_state:
@@ -37,11 +37,10 @@ if not st.session_state.auth:
 
 # --- INTERFACE OPÉRATIONNELLE ---
 st.title("🛡️ HANNA TERMINAL")
-st.write("Système Opérationnel")
+st.write(f"Système Opérationnel | {datetime.now().strftime('%H:%M')}")
 
 st.divider()
 
-# Mémoire simple
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
