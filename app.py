@@ -3,9 +3,11 @@ from datetime import datetime
 import base64
 import os
 
-# --- 1. CONFIGURATION ---
+# --- 1. CONFIGURATION INITIALE ---
 st.set_page_config(page_title="HANNA", layout="centered", initial_sidebar_state="collapsed")
 
+# --- 2. PARAMÈTRES & LOGO ---
+PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo1.png"
 
 @st.cache_data(show_spinner=False)
@@ -17,78 +19,72 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 2. ARCHITECTURE CSS (CENTRAGE TOTAL & MINIMALISME) ---
-st.markdown(f"""
+# --- 3. ARCHITECTURE CSS (CENTRAGE & STYLE) ---
+st.markdown("""
     <style>
-    /* Centrage structurel profond */
-    .stMainBlockContainer {{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }}
+    .block-container { 
+        padding-top: 2rem; 
+        max-width: 500px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+    }
     
-    .block-container {{
-        max-width: 500px !important;
-        padding-top: 3rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }}
-
-    /* Header & Logo */
-    .hanna-header {{
+    .hanna-header { 
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        margin-bottom: 3rem;
-    }}
-
-    .hanna-logo {{
-        width: 115px;
-        height: auto;
-        margin-bottom: 20px;
-    }}
-
-    .hanna-title {{
-        font-family: 'Inter', sans-serif;
-        font-weight: 200;
-        letter-spacing: 12px;
-        font-size: 42px;
-        color: #1A1A1A;
-        margin: 0;
-        padding-left: 12px;
-    }}
-
-    .hanna-sub {{
-        font-family: 'Inter', sans-serif;
-        font-weight: 300;
-        font-size: 9px;
-        color: #AAA;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        margin-top: 10px;
-    }}
-
-    /* Zone de Capture */
-    div[data-baseweb="input"] {{ 
-        border-radius: 14px !important; 
-        width: 100% !important;
-        background-color: #FDFDFD !important;
-        border: 1px solid #EEE !important;
-    }}
-    input {{ text-align: center !important; font-size: 16px !important; color: #333 !important; }}
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center;
+        text-align: center; 
+        margin-bottom: 2rem; 
+    }
     
-    /* Masquer les éléments natifs Streamlit */
-    #MainMenu, footer, header {{ visibility: hidden; height: 0; }}
-    .stDeployButton {{ display:none; }}
+    .hanna-logo-wrapper {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .hanna-logo { 
+        width: 110px; 
+        height: auto;
+    }
+    
+    .hanna-title { 
+        font-family: 'Inter', sans-serif;
+        font-weight: 200; 
+        letter-spacing: 12px; 
+        font-size: 42px; 
+        color: #1A1A1A; 
+        margin: 0;
+        line-height: 1.1;
+        padding-left: 12px;
+    }
+    
+    .hanna-sub { 
+        font-family: 'Inter', sans-serif;
+        font-weight: 300; 
+        font-size: 9px; 
+        color: #999; 
+        letter-spacing: 1.5px; 
+        text-transform: uppercase;
+        margin-top: 8px;
+    }
+
+    div[data-baseweb="input"] { border-radius: 12px !important; border: 1px solid #EEE !important; background: #FDFDFD !important; }
+    input { text-align: center !important; font-family: 'Inter', sans-serif !important; }
+    
+    .stButton > button { width: 100%; border-radius: 8px; color: #BBB; font-size: 10px; border: 1px solid #F0F0F0; margin-top: 20px; }
+    .stButton > button:hover { color: #000; border-color: #000; }
+
+    #MainMenu, footer, header { visibility: hidden; height: 0; }
     </style>
 """, unsafe_allow_html=True)
 
-# --- 3. RENDU DU HEADER ---
-logo_html = f"<img src='data:image/png;base64,{LOGO_B64}' class='hanna-logo'>" if LOGO_B64 else ""
+# --- 4. RENDU DU HEADER ---
+logo_html = f"<div class='hanna-logo-wrapper'><img src='data:image/png;base64,{LOGO_B64}' class='hanna-logo'></div>" if LOGO_B64 else ""
 
 st.markdown(f"""
     <div class="hanna-header">
@@ -98,29 +94,44 @@ st.markdown(f"""
     </div>
 """, unsafe_allow_html=True)
 
-# --- 4. LOGIQUE DE CAPTURE ---
-if 'notes' not in st.session_state: 
-    st.session_state.notes = []
+# --- 5. LOGIQUE DE SESSION ---
+if 'auth' not in st.session_state: st.session_state.auth = False
+if 'notes' not in st.session_state: st.session_state.notes = []
 
 def handle_capture():
     entry = st.session_state.get('entry_input', '').strip()
     if entry:
         ts = datetime.now().strftime("%H:%M")
-        # Insertion en haut de liste
         st.session_state.notes.insert(0, {"time": ts, "text": entry})
         st.session_state.entry_input = "" 
 
-# Champ de saisie unique
-st.text_input("CAPTURE", placeholder="Capturer l'instant...", 
-              label_visibility="collapsed", key="entry_input", on_change=handle_capture)
+# --- 6. ROUTAGE ---
+if not st.session_state.auth:
+    # Page Connexion
+    pwd = st.text_input("ACCÈS", type="password", placeholder="CODE D'ACCÈS", label_visibility="collapsed")
+    if pwd == PASSWORD_SYSTEM:
+        st.session_state.auth = True
+        st.rerun()
+    elif pwd:
+        st.caption("<p style='text-align:center; color:red;'>Accès refusé.</p>", unsafe_allow_html=True)
+else:
+    # Page de Capture avec l'ancien texte rétabli
+    st.text_input("CAPTURE", 
+                  placeholder="Demandez à HANNA", 
+                  label_visibility="collapsed", 
+                  key="entry_input", 
+                  on_change=handle_capture)
+    
+    st.write("<br>", unsafe_allow_html=True)
+    
+    for note in st.session_state.notes:
+        st.markdown(f"""
+            <div style="padding: 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid #F0F0F0; margin-bottom: 10px; width: 100%;">
+                <span style="color: #007BFF; font-weight: bold; font-size: 12px;">{note['time']}</span>
+                <span style="color: #333; font-size: 14px; margin-left: 10px;">{note['text']}</span>
+            </div>
+        """, unsafe_allow_html=True)
 
-st.write("<br>", unsafe_allow_html=True)
-
-# Affichage du flux (Feed)
-for note in st.session_state.notes:
-    st.markdown(f"""
-        <div style="padding: 15px; border-radius: 12px; background: #FFFFFF; border: 1px solid #F2F2F2; margin-bottom: 12px; width: 100%; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-            <span style="color: #007BFF; font-weight: 600; font-size: 11px; font-family: 'Inter';">{note['time']}</span>
-            <span style="color: #444; font-size: 14px; margin-left: 12px; font-family: 'Inter'; line-height: 1.4;">{note['text']}</span>
-        </div>
-    """, unsafe_allow_html=True)
+    if st.button("QUITTER LA SESSION"):
+        st.session_state.clear()
+        st.rerun()
