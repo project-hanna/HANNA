@@ -16,7 +16,7 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 (CURSEUR GAUCHE / TEXTE CENTRE) ---
+# --- 3. ARCHITECTURE CSS BDD9 (ALIGNEMENT VERTICAL FORCÉ) ---
 st.markdown(f"""
     <style>
     .main .block-container {{
@@ -29,20 +29,15 @@ st.markdown(f"""
         justify-content: center !important;
     }}
 
-    [data-testid="stVerticalBlock"], 
-    [data-testid="stVerticalBlock"] > div,
-    [data-testid="stVerticalBlock"] > div > div {{
-        display: flex !important;
-        flex-direction: column !important;
+    [data-testid="stVerticalBlock"] {{
         align-items: center !important;
-        justify-content: center !important;
         width: 100% !important;
-        text-align: center !important;
     }}
 
     .hanna-header {{
         width: 100% !important;
         margin-bottom: 3.5rem !important;
+        text-align: center !important;
     }}
 
     .hanna-logo {{
@@ -56,7 +51,6 @@ st.markdown(f"""
         font-size: 52px;
         color: #000;
         text-transform: uppercase;
-        margin: 0 !important;
         letter-spacing: 14px; 
         margin-right: -14px !important; 
         line-height: 1;
@@ -66,27 +60,27 @@ st.markdown(f"""
     div.stTextInput {{
         width: 100% !important;
         max-width: 480px !important;
-        margin: 0 auto !important;
     }}
     
     div.stTextInput input {{ 
-        text-align: left !important; /* LE CURSEUR ET LA SAISIE VONT À GAUCHE */
-        padding: 0 20px !important;  /* MARGE POUR QUE LE CURSEUR NE COLLE PAS AU BORD */
+        text-align: left !important; 
+        padding: 0 20px !important;
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
+        
+        /* ALIGNEMENT VERTICAL STRICT */
         height: 50px !important;
-        width: 100% !important;
+        line-height: 50px !important; 
     }}
 
-    /* FORCE LE PLACEHOLDER À RESTER AU CENTRE */
+    /* PLACEHOLDER AU CENTRE */
     div.stTextInput input::placeholder {{ 
-        text-align: center !important; 
+        text-align: center !important;
+        line-height: 50px !important;
     }}
     div.stTextInput input::-webkit-input-placeholder {{ 
-        text-align: center !important; 
-    }}
-    div.stTextInput input::-moz-placeholder {{ 
-        text-align: center !important; 
+        text-align: center !important;
+        line-height: 50px !important;
     }}
 
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
@@ -109,22 +103,4 @@ st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
-        <p style="font-family: 'Inter'; font-weight: 300; font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px;">Hybrid Adaptive Navigator & Network Assistant</p>
-    </div>
-""", unsafe_allow_html=True)
-
-st.text_input("CAPTURE", 
-              placeholder="Demander à HANNA", 
-              label_visibility="collapsed", 
-              key="entry_input", 
-              on_change=handle_capture)
-
-st.write("<br>", unsafe_allow_html=True)
-
-for note in st.session_state.notes:
-    st.markdown(f"""
-        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
-            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
-            <span style="color: #222; font-size: 15px;">{note['text']}</span>
-        </div>
-    """, unsafe_allow_html=True)
+        <p style="font-family: 'Inter'; font-weight: 300; font-size: 9px; color: #9
