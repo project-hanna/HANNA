@@ -16,10 +16,9 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 ---
+# --- 3. ARCHITECTURE CSS BDD8.8 (CURSEUR GAUCHE / TEXTE CENTRE) ---
 st.markdown(f"""
     <style>
-    /* Centrage du bloc principal */
     .main .block-container {{
         max-width: 550px !important;
         padding: 4rem 1rem !important;
@@ -30,7 +29,6 @@ st.markdown(f"""
         justify-content: center !important;
     }}
 
-    /* Écrase les conteneurs verticaux de Streamlit */
     [data-testid="stVerticalBlock"], 
     [data-testid="stVerticalBlock"] > div,
     [data-testid="stVerticalBlock"] > div > div {{
@@ -42,7 +40,6 @@ st.markdown(f"""
         text-align: center !important;
     }}
 
-    /* Header HANNA */
     .hanna-header {{
         width: 100% !important;
         margin-bottom: 3.5rem !important;
@@ -73,20 +70,25 @@ st.markdown(f"""
     }}
     
     div.stTextInput input {{ 
-        text-align: center !important; 
+        text-align: left !important; /* LE CURSEUR ET LA SAISIE VONT À GAUCHE */
+        padding: 0 20px !important;  /* MARGE POUR QUE LE CURSEUR NE COLLE PAS AU BORD */
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
         height: 50px !important;
         width: 100% !important;
-        padding: 0 !important;
     }}
 
-    /* Placeholder */
-    ::placeholder {{ text-align: center !important; }}
-    ::-webkit-input-placeholder {{ text-align: center !important; }}
-    ::-moz-placeholder {{ text-align: center !important; }}
+    /* FORCE LE PLACEHOLDER À RESTER AU CENTRE */
+    div.stTextInput input::placeholder {{ 
+        text-align: center !important; 
+    }}
+    div.stTextInput input::-webkit-input-placeholder {{ 
+        text-align: center !important; 
+    }}
+    div.stTextInput input::-moz-placeholder {{ 
+        text-align: center !important; 
+    }}
 
-    /* Nettoyage UI */
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     </style>
 """, unsafe_allow_html=True)
