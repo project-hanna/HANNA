@@ -88,7 +88,7 @@ if not st.session_state.auth:
     
     pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
     
-    if st.button("AUTHORIZE"):
+    if st.button("AUTHENTIFICATION"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
@@ -96,17 +96,9 @@ if not st.session_state.auth:
             st.error("Invalid credentials.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE (HARMONISÉE) ---
-# Affichage du logo en haut de la page de travail
-if os.path.exists(LOGO_FILE):
-    st.image(LOGO_FILE, width=100)
-else:
-    st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
-
-# Titrage identique à la page d'accueil
-st.markdown('<div class="hanna-main-title" style="font-size:24px; letter-spacing:8px;">HANNA</div>', unsafe_allow_html=True)
-st.markdown('<div class="hanna-sub-title" style="margin-bottom:20px;">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
-
+# --- INTERFACE PRINCIPALE ---
+st.markdown('<div style="font-weight:200; letter-spacing:5px; font-size:20px;">HANNA</div>', unsafe_allow_html=True)
+st.caption(f"Network Assistant | System Ready | {datetime.now().strftime('%H:%M')}")
 st.divider()
 
 if 'notes' not in st.session_state:
@@ -123,7 +115,6 @@ if st.session_state.notes:
     for n in reversed(st.session_state.notes):
         st.info(n)
 
-st.write("")
 if st.button("TERMINATE SESSION"):
     st.session_state.auth = False
     st.rerun()
