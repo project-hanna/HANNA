@@ -15,10 +15,14 @@ st.markdown("""
     .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
     .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
     
+    /* Centrage et taille du logo à 50% */
     [data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
         width: 100% !important;
+    }
+    [data-testid="stImage"] img {
+        width: 50% !important;
     }
 
     .hanna-main-title { 
@@ -64,11 +68,6 @@ st.markdown("""
     }
     .stButton > button:hover { background-color: #333333 !important; }
 
-    .stAlert {
-        background-color: #f8f9fa !important;
-        border-left: 2px solid #000 !important;
-    }
-
     #MainMenu, footer, header { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
@@ -79,10 +78,8 @@ if "auth" not in st.session_state:
 
 if not st.session_state.auth:
     st.write("")
-    col1, col2, col3 = st.columns([1, 1.5, 1])
-    with col2:
-        if os.path.exists(LOGO_FILE):
-            st.image(LOGO_FILE, use_container_width=True)
+    if os.path.exists(LOGO_FILE):
+        st.image(LOGO_FILE)
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="hanna-sub-title">{PROJECT_NAME} | ACCÈS SÉCURISÉ</div>', unsafe_allow_html=True)
@@ -97,10 +94,9 @@ if not st.session_state.auth:
             st.error("Accès refusé.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE (MODIFIÉE POUR LE CENTRAGE) ---
-# Bloc Logo Centré
+# --- INTERFACE PRINCIPALE ---
 if os.path.exists(LOGO_FILE):
-    st.image(LOGO_FILE, width=60)
+    st.image(LOGO_FILE)
 
 st.markdown(f'<div class="hanna-main-title" style="font-size:22px; letter-spacing:4px; margin-top:0px;">{PROJECT_NAME}</div>', unsafe_allow_html=True)
 st.markdown(f'<div class="hanna-sub-title" style="margin-bottom:10px;">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
