@@ -32,16 +32,26 @@ st.markdown(f"""
     .hanna-title {{ font-weight: 200; letter-spacing: 10px; font-size: 28px; color: #000; text-transform: uppercase; margin: 0; }}
     .hanna-sub {{ font-weight: 300; font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }}
 
-    /* Inputs Design */
-    div.stTextInput > div > div > input {{ text-align: center; border-radius: 8px; height: 45px; border: 1px solid #eee; background: #fafafa; }}
+    /* DESIGN DU CHAMP DE SAISIE : ALIGNEMENT GAUCHE */
+    div.stTextInput > div > div > input {{ 
+        text-align: left !important; 
+        padding-left: 45px !important; /* Espace pour l'icône à gauche */
+        border-radius: 8px; 
+        height: 45px; 
+        border: 1px solid #eee; 
+        background: #fafafa; 
+    }}
     
     /* DÉPLACEMENT DU BOUTON SHOW PASSWORD À GAUCHE */
     div[data-baseweb="input"] > div {{
         flex-direction: row-reverse !important;
     }}
+    
+    /* Positionnement précis de l'icône de l'œil */
     div[data-baseweb="input"] button {{
         margin-left: 10px !important;
-        margin-right: 0 !important;
+        margin-right: -35px !important; /* Ajustement pour ne pas pousser le texte */
+        z-index: 10;
     }}
 
     /* Bouton Quitter Discret */
@@ -71,7 +81,7 @@ def process_entry():
 
 # --- LOGIQUE DE ROUTAGE ---
 if not st.session_state.auth:
-    # Page Connexion (L'icône sera à gauche ici)
+    # Page Connexion
     pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     if pwd:
         if pwd == PASSWORD_SYSTEM:
