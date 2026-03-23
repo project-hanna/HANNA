@@ -6,7 +6,7 @@ import os
 # --- 1. CONFIGURATION ---
 st.set_page_config(page_title="HANNA", layout="centered", initial_sidebar_state="collapsed")
 
-# --- 2. GESTION DU LOGO ---
+# --- 2. LOGO ---
 LOGO_FILE = "logo1.png"
 def get_base64_logo(file_path):
     if os.path.exists(file_path):
@@ -16,10 +16,9 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. ARCHITECTURE CSS BDD8.8 (CENTRAGE TOTAL ET FORCÉ) ---
+# --- 3. CSS BDD8.9 (ALIGNEMENT VERTICAL DU TEXTE) ---
 st.markdown(f"""
     <style>
-    /* 1. Force le conteneur global à tout centrer */
     .main .block-container {{
         max-width: 550px !important;
         padding: 4rem 1rem !important;
@@ -27,73 +26,69 @@ st.markdown(f"""
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: center !important;
     }}
 
-    /* 2. Écrase TOUS les conteneurs verticaux de Streamlit pour forcer le milieu */
-    [data-testid="stVerticalBlock"], 
-    [data-testid="stVerticalBlock"] > div,
-    [data-testid="stVerticalBlock"] > div > div {{
+    [data-testid="stVerticalBlock"] > div {{
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        justify-content: center !important;
         width: 100% !important;
-        text-align: center !important;
     }}
 
-    /* 3. Header HANNA */
     .hanna-header {{
         width: 100% !important;
+        text-align: center !important;
         margin-bottom: 3.5rem !important;
     }}
 
-    .hanna-logo {{
-        width: 120px !important;
-        margin-bottom: 25px !important;
-    }}
+    .hanna-logo {{ width: 120px !important; margin-bottom: 25px !important; }}
 
     .hanna-title {{
         font-family: 'Inter', sans-serif;
         font-weight: 200;
         font-size: 52px;
-        color: #000;
-        text-transform: uppercase;
-        margin: 0 !important;
         letter-spacing: 14px; 
         margin-right: -14px !important; 
+        text-transform: uppercase;
         line-height: 1;
     }}
 
-    /* 4. CHAMP DE SAISIE : Centrage Absolu de l'objet et du texte */
+    /* --- CORRECTION VERTICALE DU CHAMP DE SAISIE --- */
     div.stTextInput {{
         width: 100% !important;
         max-width: 480px !important;
-        margin: 0 auto !important; /* Force le bloc au milieu */
     }}
     
     div.stTextInput input {{ 
         text-align: center !important; 
         border-radius: 12px !important; 
         border: 1px solid #EEE !important;
-        height: 50px !important;
-        width: 100% !important;
-        padding: 0 !important; /* Élimine les décalages internes */
+        
+        height: 54px !important; /* Hauteur fixe pour contrôle total */
+        line-height: 54px !important; /* Force le texte au centre vertical */
+        padding: 0 !important; /* Supprime le padding qui pousse le texte en bas */
+        
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }}
 
     /* Centrage du placeholder "Demander à HANNA" */
-    ::placeholder {{ text-align: center !important; }}
-    ::-webkit-input-placeholder {{ text-align: center !important; }}
-    ::-moz-placeholder {{ text-align: center !important; }}
+    ::placeholder {{ 
+        text-align: center !important; 
+        line-height: normal !important; /* Évite les conflits de hauteur */
+        vertical-align: middle !important;
+    }}
+    
+    ::-webkit-input-placeholder {{ line-height: 54px !important; text-align: center !important; }}
+    ::-moz-placeholder {{ line-height: 54px !important; text-align: center !important; }}
 
-    /* Nettoyage UI */
     #MainMenu, footer, header {{ visibility: hidden; display: none !important; }}
     </style>
 """, unsafe_allow_html=True)
 
-# --- 4. LOGIQUE DE CAPTURE ---
-if 'notes' not in st.session_state: 
-    st.session_state.notes = []
+# --- 4. LOGIQUE ---
+if 'notes' not in st.session_state: st.session_state.notes = []
 
 def handle_capture():
     entry = st.session_state.get('entry_input', '').strip()
@@ -107,11 +102,10 @@ st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
-        <p style="font-family: 'Inter'; font-weight: 300; font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px;">Hybrid Adaptive Navigator & Network Assistant</p>
+        <p style="font-family: 'Inter'; font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px;">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Saisie
 st.text_input("CAPTURE", 
               placeholder="Demander à HANNA", 
               label_visibility="collapsed", 
@@ -120,11 +114,9 @@ st.text_input("CAPTURE",
 
 st.write("<br>", unsafe_allow_html=True)
 
-# Liste des captures (alignées à gauche pour la lisibilité)
 for note in st.session_state.notes:
     st.markdown(f"""
         <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
-            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
-            <span style="color: #222; font-size: 15px;">{note['text']}</span>
+            <small style="color: #007BFF; font-weight: 800;">{note['time']}</small><br>{note['text']}
         </div>
     """, unsafe_allow_html=True)
