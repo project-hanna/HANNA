@@ -1,17 +1,22 @@
 import streamlit as st
 from datetime import datetime
-import os
 
-# --- CONFIGURATION HANNA ---
+# --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
-NEW_LOGO = "logo2.png"
 
 st.set_page_config(page_title="HANNA Terminal", layout="wide")
 
-# Style CSS pour l'ambiance Terminal
+# Style CSS pour un logo textuel "Cyber"
 st.markdown("""
     <style>
     .stApp { background-color: #0e1117; color: #00ff41; font-family: 'Courier New', monospace; }
+    .cyber-logo { 
+        font-size: 50px; 
+        font-weight: bold; 
+        text-align: center; 
+        text-shadow: 2px 2px #ff0000, -2px -2px #0000ff;
+        margin-bottom: 10px;
+    }
     .stTextInput>div>div>input { background-color: #1a1c24; color: #00ff41; border: 1px solid #00ff41; }
     .stButton>button { width: 100%; background-color: #00ff41; color: #0e1117; border: none; font-weight: bold; }
     h1, h2, h3 { color: #00ff41 !important; text-align: center; }
@@ -26,17 +31,13 @@ if not st.session_state.auth:
     col1, col_center, col3 = st.columns([1, 1.5, 1])
     with col_center:
         st.write("")
-        # Tentative d'affichage du NOUVEAU LOGO
-        if os.path.exists(NEW_LOGO):
-            try:
-                st.image(NEW_LOGO, width=180)
-            except:
-                st.title("🛡️ HANNA")
-        else:
-            st.title("🛡️ HANNA")
-            st.caption("En attente de logo2.png...")
-
-        st.subheader("Accès Restreint")
+        st.write("")
+        # LOGO TEXTUEL (Remplace l'image qui pose problème)
+        st.markdown('<div class="cyber-logo">🛡️ HANNA</div>', unsafe_allow_index=True)
+        st.caption("<p style='text-align: center;'>Hybrid Adaptive Navigator & Network Assistant</p>", unsafe_allow_index=True)
+        
+        st.divider()
+        
         pwd = st.text_input("Code d'autorisation :", type="password", key="login_pass")
         
         if st.button("Authentification"):
@@ -47,9 +48,9 @@ if not st.session_state.auth:
                 st.error("❌ Code invalide.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE ---
-st.title("🛡️ HANNA Terminal - Opérationnel")
-st.caption(f"Système Sécurisé | {datetime.now().strftime('%H:%M')}")
+# --- INTERFACE PRINCIPALE (DÉVERROUILLÉE) ---
+st.markdown('<div style="color: #00ff41; font-size: 24px; font-weight: bold;">🛡️ HANNA Terminal</div>', unsafe_allow_index=True)
+st.caption(f"Système Opérationnel | {datetime.now().strftime('%H:%M')}")
 st.divider()
 
 # Gestionnaire de Notes
