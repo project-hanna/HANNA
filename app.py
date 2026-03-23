@@ -103,4 +103,26 @@ def handle_capture():
         st.session_state.entry_input = "" 
 
 # --- 5. RENDU ---
-st.
+st.markdown(f"""
+    <div class="hanna-header">
+        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        <h1 class="hanna-title">HANNA</h1>
+        <p style="font-family: 'Inter'; font-weight: 300; font-size: 9px; color: #999; letter-spacing: 2.5px; text-transform: uppercase; margin-top: 15px;">Hybrid Adaptive Navigator & Network Assistant</p>
+    </div>
+""", unsafe_allow_html=True)
+
+st.text_input("CAPTURE", 
+              placeholder="Demander à HANNA", 
+              label_visibility="collapsed", 
+              key="entry_input", 
+              on_change=handle_capture)
+
+st.write("<br>", unsafe_allow_html=True)
+
+for note in st.session_state.notes:
+    st.markdown(f"""
+        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
+            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
+            <span style="color: #222; font-size: 15px;">{note['text']}</span>
+        </div>
+    """, unsafe_allow_html=True)
