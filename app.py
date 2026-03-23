@@ -9,7 +9,7 @@ LOGO_FILE = "logo1.png"
 
 st.set_page_config(page_title="HANNA", layout="centered", initial_sidebar_state="collapsed")
 
-# --- OPTIMISATION VITESSE ---
+# --- OPTIMISATION VITESSE : CACHE ---
 @st.cache_data
 def get_base64_logo(file_path):
     if os.path.exists(file_path):
@@ -40,37 +40,41 @@ st.markdown("""
     /* Masquer l'icône SHOW PASSWORD d'origine */
     button[aria-label="Show password"] { display: none !important; }
 
-    /* Conteneur du champ de saisie */
-    div[data-testid="stTextInput"] { position: relative; }
+    /* Conteneur de l'input pour positionnement relatif */
+    div[data-testid="stTextInput"] { position: relative; width: 100%; }
 
-    /* Input Design */
+    /* Design du champ de saisie */
     div.stTextInput > div > div > input {
-        text-align: center;
+        text-align: left;
+        padding-left: 20px !important;
+        padding-right: 90px !important; /* Espace réservé pour le bouton */
         background-color: #fafafa !important;
         border: 1px solid #eeeeee !important;
         border-radius: 8px !important;
         height: 50px !important;
-        padding-right: 80px !important; /* Espace pour le bouton */
     }
 
-    /* POSITIONNEMENT DU BOUTON "ENTRER" DANS LE CHAMP */
+    /* POSITIONNEMENT DU BOUTON ENTRER À LA PLACE DE L'OEIL */
+    /* Le bouton Streamlit est normalement en dessous, on le remonte par-dessus l'input */
     .stButton > button {
         position: absolute;
         right: 5px;
-        top: -47px; /* Ajustement pour remonter dans le champ */
-        width: 70px !important;
+        top: -45px; /* Ajustement vertical précis */
+        width: 80px !important;
         height: 40px !important;
-        background-color: #000 !important;
-        color: #fff !important;
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: none !important;
         border-radius: 6px !important;
-        font-size: 10px !important;
+        font-weight: 400 !important;
+        font-size: 11px !important;
         letter-spacing: 1px !important;
-        z-index: 100;
-        transition: all 0.3s;
+        z-index: 1000;
+        transition: all 0.3s ease;
     }
-    .stButton > button:hover { background-color: #333 !important; transform: scale(1.05); }
+    .stButton > button:hover { background-color: #333333 !important; }
 
-    /* UI Clean */
+    /* Nettoyage UI */
     #MainMenu, footer, header { visibility: hidden; }
     .stDeployButton { display:none; }
     </style>
@@ -81,17 +85,19 @@ def draw_header():
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
 
+# --- LOGIQUE DE SESSION ---
 if "auth" not in st.session_state:
     st.session_state.auth = False
+if 'notes' not in st.session_state:
+    st.session_state.notes = []
 
 # --- PAGE DE CONNEXION ---
 if not st.session_state.auth:
     st.write("")
     draw_header()
     
-    # Le champ de saisie
     pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
-    # Le bouton qui vient se loger à l'intérieur via CSS
+    # Ce bouton va se loger visuellement DANS l'input au-dessus de lui
     if st.button("ENTRER", key="login_btn"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
@@ -104,21 +110,22 @@ if not st.session_state.auth:
 draw_header()
 st.divider()
 
-if 'notes' not in st.session_state:
-    st.session_state.notes = []
-
 new_note = st.text_input("CAPTURE", label_visibility="collapsed", placeholder="Demandez à HANNA")
 
+# Même logique de bouton intégré pour la capture
 if st.button("ENTRER", key="sync_btn"):
     if new_note:
-        st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
+        timestamp = datetime.now().strftime("%H:%M")
+        st.session_state.notes.append(f"[{timestamp}] {new_note}")
         st.rerun()
 
 if st.session_state.notes:
     for n in reversed(st.session_state.notes):
-        st.markdown(f'<div style="padding:12px; background:#f9f9f9; border-radius:8px; margin-bottom:8px; border-left:3px solid #000; font-size:14px; animation: fadeIn 0.5s;">{n}</div>', unsafe_allow_html=True)
+        st.markdown(f"""<div style="padding:12px; background:#f9f9f9; border-radius:8px; margin-bottom:8px; 
+                    border-left:3px solid #000; font-size:14px; animation: fadeIn 0.5s;">{n}</div>""", 
+                    unsafe_allow_html=True)
 
 st.write("")
-if st.button("QUITTER LA SESSION", key="logout"):
+if st.button("QUITTER LA SESSION"):
     st.session_state.clear()
     st.rerun()
