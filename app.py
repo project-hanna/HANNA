@@ -4,14 +4,13 @@ import base64
 import os
 
 # --- CONFIGURATION & SÉCURITÉ ---
-PASSWORD_SYSTEM = st.secrets.get("PASSWORD", "mtt.mallee@gmail.C94")
+PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo1.png"
 
 st.set_page_config(page_title="HANNA", layout="centered", initial_sidebar_state="collapsed")
 
 @st.cache_data(show_spinner=False)
 def get_base64_logo(file_path):
-    """Mise en cache optimisée du logo."""
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
             return base64.b64encode(f.read()).decode()
@@ -19,43 +18,27 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- CSS ARCHITECTURE BDD7.2 (COULEUR & DYNAMISME) ---
-# Optimisation : Logo en couleur, accents interactifs
-st.markdown(f"""
+# --- CSS ARCHITECTURE BDD7.2 (CORRIGÉ) ---
+st.markdown("""
     <style>
-    /* Reset & Container */
-    .block-container {{ padding-top: 2rem; max-width: 500px; }}
-    .stApp {{ background-color: #FFFFFF; }}
-    
-    /* Typography Premium */
+    .block-container { padding-top: 2rem; max-width: 500px; }
+    .stApp { background-color: #FFFFFF; }
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
     
-    .hanna-header {{ text-align: center; margin-bottom: 2rem; pointer-events: none; }}
+    .hanna-header { text-align: center; margin-bottom: 2rem; pointer-events: none; }
+    .hanna-logo { width: 100px; filter: none; opacity: 1; transition: transform 0.3s ease-out; }
     
-    /* --- MODIFICATION LOGO : EN COULEUR --- */
-    .hanna-logo {{ 
-        width: 100px; 
-        /* Suppression de grayscale(100%) et opacity */
-        filter: none; 
-        opacity: 1; 
-        transition: transform 0.3s ease-out; 
-    }}
-    /* Petit effet au survol, subtil mais moderne */
-    .hanna-header:hover .hanna-logo {{
-        transform: scale(1.05);
-    }}
-    
-    .hanna-title {{ 
+    .hanna-title { 
         font-family: 'Inter', sans-serif;
         font-weight: 200; 
         letter-spacing: 12px; 
-        font-size: clamp(30px, 10vw, 52px); 
-        color: #1A1A1A; /* Un noir moins agressif */
+        font-size: 42px; 
+        color: #1A1A1A; 
         margin: 10px 0 0 0;
         line-height: 1;
-    }}
+    }
     
-    .hanna-sub {{ 
+    .hanna-sub { 
         font-family: 'Inter', sans-serif;
         font-weight: 300; 
         font-size: 9px; 
@@ -63,37 +46,65 @@ st.markdown(f"""
         letter-spacing: 1.5px; 
         text-transform: uppercase;
         margin-top: 8px;
-    }}
+    }
 
-    /* Inputs & UI Components - Ajout d'une ombre douce */
-    div[data-baseweb="input"] {{ 
+    div[data-baseweb="input"] { 
         border-radius: 12px !important; 
         background: #FFFFFF !important; 
         border: 1px solid #EAEAEA !important; 
-        box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-        transition: box-shadow 0.2s;
-    }}
-    div[data-baseweb="input"]:focus-within {{
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border-color: #DDD !important;
-    }}
-    input {{ text-align: center !important; font-family: 'Inter', sans-serif !important; color: #333; }}
+    }
+    input { text-align: center !important; font-family: 'Inter', sans-serif !important; }
     
-    /* Bouton Quitter : Plus coloré au survol */
-    .stButton > button {{ 
+    .stButton > button { 
         width: 100%; border-radius: 8px; border: 1px solid #EEE; 
-        background: white; color: #AAA; font-size: 11px; transition: all 0.2s;
-    }}
-    .stButton > button:hover {{ 
-        color: #FF4B4B; /* Couleur d'accentuation pour l'action de quitter */
-        border-color: #FF4B4B; 
-        background: #FFF5F5; 
-    }}
+        background: white; color: #AAA; font-size: 11px;
+    }
+    .stButton > button:hover { color: #FF4B4B; border-color: #FF4B4B; }
 
-    /* Masquage des éléments natifs Streamlit */
-    #MainMenu, footer, header {{ visibility: hidden; height: 0; }}
+    #MainMenu, footer, header { visibility: hidden; height: 0; }
     </style>
-    
+""", unsafe_allow_html=True)
+
+# --- HEADER HTML ---
+logo_html = f"<img src='data:image/png;base64,{LOGO_B64}' class='hanna-logo'>" if LOGO_B64 else ""
+st.markdown(f"""
     <div class="hanna-header">
-        {"<img src='data:image/png;base64," + LOGO_B64 + "' class='hanna-logo'>" if LOGO_B64 else ""}
-        <h1
+        {logo_html}
+        <h1 class="hanna-title">HANNA</h1>
+        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
+    </div>
+""", unsafe_allow_html=True)
+
+# --- LOGIQUE SESSION ---
+if 'auth' not in st.session_state: st.session_state.auth = False
+if 'notes' not in st.session_state: st.session_state.notes = []
+
+def handle_capture():
+    entry = st.session_state.get('entry_input', '').strip()
+    if entry:
+        ts = datetime.now().strftime("%H:%M")
+        st.session_state.notes.insert(0, {"time": ts, "text": entry})
+        st.session_state.entry_input = "" 
+
+# --- ROUTAGE ---
+if not st.session_state.auth:
+    pwd = st.text_input("ACCÈS", type="password", placeholder="PASSWORD", label_visibility="collapsed")
+    if pwd == PASSWORD_SYSTEM:
+        st.session_state.auth = True
+        st.rerun()
+    elif pwd:
+        st.caption("Identifiant invalide.")
+else:
+    st.text_input("CAPTURE", placeholder="Échanger avec HANNA...", label_visibility="collapsed", key="entry_input", on_change=handle_capture)
+    
+    for note in st.session_state.notes:
+        st.markdown(f"""
+            <div style="padding: 14px; border-radius: 12px; background: #F9F9F9; border: 1px solid #F0F0F0; margin-bottom: 10px;">
+                <span style="color: #007BFF; font-weight: bold; font-size: 12px;">{note['time']}</span>
+                <span style="color: #333; font-size: 14px; margin-left: 10px;">{note['text']}</span>
+            </div>
+        """, unsafe_allow_html=True)
+
+    if st.button("TERMINER LA SESSION"):
+        st.session_state.clear()
+        st.rerun()
