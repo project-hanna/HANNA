@@ -8,16 +8,20 @@ LOGO_FILE = "logo2.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ÉLÉGANT & CENTRAGE ABSOLU ---
+# --- STYLE ÉLÉGANT & CENTRAGE FORCÉ ---
 st.markdown("""
     <style>
     .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
-    /* Centrage horizontal du logo */
+    /* Centrage horizontal du bloc image Streamlit */
     [data-testid="stImage"] {
-        display: flex;
-        justify-content: center;
-        width: 100%;
+        display: flex !important;
+        justify-content: center !important;
+        width: 100% !important;
+    }
+    [data-testid="stImage"] > img {
+        margin-left: auto;
+        margin-right: auto;
     }
     
     /* Titre HANNA : Espacement large */
@@ -78,13 +82,15 @@ if not st.session_state.auth:
     st.write("")
     st.write("")
     
-    # Bloc central Logo
-    if os.path.exists(LOGO_FILE):
-        st.image(LOGO_FILE, width=160)
-    else:
-        st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
+    # Affichage du logo via une colonne centrée (sécurité supplémentaire)
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        if os.path.exists(LOGO_FILE):
+            st.image(LOGO_FILE, use_container_width=True)
+        else:
+            st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
 
-    # Titres (Correction de la ligne 93 : suppression de unsafe_allow_index)
+    # Titres
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
