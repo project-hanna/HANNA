@@ -17,9 +17,9 @@ def display_centered_logo(file_path, width_px=120):
         st.markdown(
             f"""
             <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 10px;">
-                <img src="data:image/png;base64,{data}" style="width: {width_px}px; height: auto;">
+                <img src="data:image/png;base64,{{data}}" style="width: {{width_px}}px; height: auto;">
             </div>
-            """,
+            """.format(data=data, width_px=width_px),
             unsafe_allow_html=True
         )
 
@@ -88,4 +88,15 @@ if not st.session_state.auth:
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
     pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
-    if st
+    if st.button("ENTRER", key="login_btn"):
+        if pwd == PASSWORD_SYSTEM:
+            st.session_state.auth = True
+            st.rerun()
+        else:
+            st.error("Accès refusé.")
+    st.stop()
+
+# --- PAGE 2 ---
+display_centered_logo(LOGO_FILE, 120)
+st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
+st.markdown('<div
