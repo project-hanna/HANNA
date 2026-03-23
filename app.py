@@ -88,7 +88,7 @@ if not st.session_state.auth:
     
     pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
     
-    if st.button("AUTHENTIFICATION"):
+    if st.button("AUTHORIZE"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
