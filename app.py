@@ -16,40 +16,45 @@ def get_base64_logo(file_path):
 
 LOGO_B64 = get_base64_logo(LOGO_FILE)
 
-# --- 3. CSS FORCE-CENTER (CORRECTION GÉOMÉTRIQUE BDD8.1) ---
+# --- 3. CSS FORCE-CENTER ABSOLU (BDD8.2) ---
 st.markdown(f"""
     <style>
-    /* 1. Centrage forcé des conteneurs parents Streamlit */
+    /* 1. Neutraliser totalement le layout Streamlit */
+    .stApp {{ 
+        align-items: center !important; 
+    }}
+    
     .main .block-container {{
-        max-width: 500px !important;
-        padding-top: 2rem !important;
+        max-width: 550px !important;
+        padding: 4rem 1rem !important;
+        margin: 0 auto !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-start !important;
     }}
 
+    /* 2. Forcer le centrage de TOUS les blocs verticaux */
     [data-testid="stVerticalBlock"] {{
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
         align-items: center !important;
+        width: 100% !important;
     }}
 
-    /* 2. Header HANNA - Alignement des axes */
+    /* 3. Header HANNA - Centrage Mathématique */
     .hanna-header {{
         width: 100% !important;
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         text-align: center !important;
-        margin-bottom: 2.5rem !important;
+        margin-bottom: 3rem !important;
     }}
 
     .hanna-logo {{
         width: 120px !important;
         height: auto !important;
-        margin-bottom: 15px !important;
+        margin-bottom: 20px !important;
+        display: block !important;
     }}
 
     .hanna-title {{
@@ -59,37 +64,37 @@ st.markdown(f"""
         color: #000;
         text-transform: uppercase;
         margin: 0 !important;
-        line-height: 1.1;
+        line-height: 1;
         
-        /* TECHNIQUE DE CENTRAGE ABSOLU : */
+        /* Compensation précise du letter-spacing */
         letter-spacing: 14px; 
-        margin-right: -14px !important; /* Annule l'espace fantôme après le dernier 'A' */
+        margin-right: -14px !important; 
         
-        display: inline-block !important;
-        width: auto !important;
+        display: block !important;
+        width: 100% !important;
     }}
 
     .hanna-sub {{
         font-weight: 300;
-        font-size: 8px;
+        font-size: 9px;
         color: #999;
-        letter-spacing: 2px;
+        letter-spacing: 2.5px;
         text-transform: uppercase;
-        margin-top: 10px !important;
-        margin-right: -2px !important; /* Compensation sub */
+        margin-top: 15px !important;
+        margin-right: -2.5px !important;
     }}
 
-    /* 3. Champ Saisie */
-    div.stTextInput {{ width: 100% !important; }}
+    /* 4. Champ Saisie */
+    div.stTextInput {{ width: 100% !important; max-width: 450px !important; }}
     div.stTextInput input {{ 
         text-align: center !important; 
-        border-radius: 10px !important; 
+        border-radius: 12px !important; 
         border: 1px solid #EEE !important;
-        background: #FDFDFD !important;
+        height: 50px !important;
     }}
 
-    /* Suppression des éléments parasites */
-    #MainMenu, footer, header {{ visibility: hidden; height: 0; }}
+    /* Suppression des éléments Streamlit qui décentrent */
+    #MainMenu, footer, header {{ visibility: hidden; display: none; }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -119,8 +124,8 @@ st.write("<br>", unsafe_allow_html=True)
 
 for note in st.session_state.notes:
     st.markdown(f"""
-        <div style="padding: 12px; border-radius: 10px; background: #F9F9F9; border: 1px solid #EEE; margin-bottom: 10px; width: 100%; text-align: left;">
-            <small style="color: #007BFF; font-weight: bold;">{note['time']}</small><br>
-            <span style="color: #333;">{note['text']}</span>
+        <div style="padding: 15px; border-radius: 12px; background: #FAFAFA; border: 1px solid #F0F0F0; margin-bottom: 12px; width: 100%; text-align: left;">
+            <small style="color: #007BFF; font-weight: 800; font-size: 11px;">{note['time']}</small><br>
+            <span style="color: #222; font-size: 15px; font-family: 'Inter';">{note['text']}</span>
         </div>
     """, unsafe_allow_html=True)
