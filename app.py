@@ -5,72 +5,70 @@ import os
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo2.png"
+PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ÉLÉGANT & CENTRAGE ABSOLU ---
+# --- STYLE DESIGN BLANC & COMPACT (GLOBAL) ---
 st.markdown("""
     <style>
-    .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
+    .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
+    .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
     
-    /* Centrage horizontal du logo et du conteneur d'image */
-    .stImage {
+    [data-testid="stImage"] {
         display: flex !important;
         justify-content: center !important;
-        align-items: center !important;
         width: 100% !important;
     }
-    .stImage > div {
-        display: flex !important;
-        justify-content: center !important;
-    }
-    
-    /* Titre HANNA : Espacement large */
+
     .hanna-main-title { 
         font-weight: 200; 
-        letter-spacing: 12px; 
+        letter-spacing: 10px; 
         text-transform: uppercase; 
-        font-size: clamp(24px, 5vw, 32px); 
+        font-size: 28px; 
         text-align: center; 
         color: #000000;
-        margin-top: 20px;
-        margin-bottom: 5px;
-        width: 100%;
+        margin-top: 10px;
+        margin-bottom: 2px;
     }
     
-    /* Sous-titre complet */
     .hanna-sub-title {
         font-weight: 300;
-        font-size: clamp(10px, 3vw, 11px);
+        font-size: 10px;
         text-align: center;
         color: #999999;
         letter-spacing: 1.5px;
-        margin-bottom: 40px;
+        margin-bottom: 25px;
         text-transform: uppercase;
-        width: 100%;
     }
 
-    /* Input et Boutons centrés */
     div.stTextInput > div > div > input {
         text-align: center;
-        border: 1px solid #eeeeee !important;
+        background-color: #fcfcfc !important;
+        border: 1px solid #f0f0f0 !important;
         border-radius: 4px !important;
-        height: 45px;
+        height: 40px !important;
     }
     
     .stButton > button {
-        width: 100%;
-        background-color: #000000;
-        color: #ffffff;
-        border: none;
-        font-weight: 300;
-        letter-spacing: 2px;
-        height: 45px;
-        border-radius: 4px;
+        width: 100% !important;
+        background-color: #000000 !important;
+        color: #ffffff !important;
+        border: none !important;
+        font-weight: 400 !important;
+        letter-spacing: 2px !important;
+        height: 40px !important;
+        border-radius: 4px !important;
+        text-transform: uppercase !important;
+        font-size: 12px !important;
     }
-    .stButton > button:hover { background-color: #222222; }
+    .stButton > button:hover { background-color: #333333 !important; }
 
-    /* Masquage interface Streamlit */
+    .stAlert {
+        background-color: #f8f9fa !important;
+        border-left: 2px solid #000 !important;
+    }
+
     #MainMenu, footer, header { visibility: hidden; }
     </style>
     """, unsafe_allow_html=True)
@@ -80,49 +78,49 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
-    # Espacement pour descendre un peu le contenu
     st.write("")
-    st.write("")
-    
-    # Bloc central
-    if os.path.exists(LOGO_FILE):
-        st.image(LOGO_FILE, width=160)
-    else:
-        st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns([1, 1.5, 1])
+    with col2:
+        if os.path.exists(LOGO_FILE):
+            st.image(LOGO_FILE, use_container_width=True)
 
-    # REPARATION : Argument invalide supprimé
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-    st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="hanna-sub-title">{PROJECT_NAME} | ACCÈS SÉCURISÉ</div>', unsafe_allow_html=True)
     
-    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
+    pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     
-    if st.button("AUTHORIZE"):
+    if st.button("ENTRER"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
         else:
-            st.error("Invalid credentials.")
+            st.error("Accès refusé.")
     st.stop()
 
-# --- INTERFACE PRINCIPALE ---
-st.markdown('<div style="font-weight:200; letter-spacing:5px; font-size:20px;">HANNA</div>', unsafe_allow_html=True)
-st.caption(f"Network Assistant | System Ready | {datetime.now().strftime('%H:%M')}")
+# --- INTERFACE PRINCIPALE (MODIFIÉE POUR LE CENTRAGE) ---
+# Bloc Logo Centré
+if os.path.exists(LOGO_FILE):
+    st.image(LOGO_FILE, width=60)
+
+st.markdown(f'<div class="hanna-main-title" style="font-size:22px; letter-spacing:4px; margin-top:0px;">{PROJECT_NAME}</div>', unsafe_allow_html=True)
+st.markdown(f'<div class="hanna-sub-title" style="margin-bottom:10px;">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
+
 st.divider()
 
 if 'notes' not in st.session_state:
     st.session_state.notes = []
 
-with st.expander("NEW DATA ENTRY", expanded=True):
-    new_note = st.text_input("Capture:", key="main_input", placeholder="...")
-    if st.button("SYNCHRONIZE"):
-        if new_note:
-            st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
-            st.success("Entry recorded.")
+new_note = st.text_input("CAPTURE :", label_visibility="collapsed", placeholder="Saisir une information...")
+if st.button("SYNCHRONISER"):
+    if new_note:
+        st.session_state.notes.append(f"[{datetime.now().strftime('%H:%M')}] {new_note}")
+        st.rerun()
 
 if st.session_state.notes:
     for n in reversed(st.session_state.notes):
         st.info(n)
 
-if st.button("TERMINATE SESSION"):
+st.write("")
+if st.button("QUITTER LA SESSION"):
     st.session_state.auth = False
     st.rerun()
