@@ -1,131 +1,79 @@
 import streamlit as st
 from datetime import datetime
-import os
 import base64
+import os
 
-# --- CONFIGURATION SÉCURISÉE ---
+# --- CONFIGURATION & CACHE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo1.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- OPTIMISATION VITESSE : CACHE ---
 @st.cache_data
-def get_base64_logo(file_path):
+def get_ui_elements(file_path):
+    """Préchauffage du logo et des ressources statiques."""
+    logo_b64 = ""
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
-            return base64.b64encode(f.read()).decode("utf-8")
-    return None
+            logo_b64 = base64.b64encode(f.read()).decode()
+    return logo_b64
 
-def display_centered_logo(width_px=120):
-    logo_data = get_base64_logo(LOGO_FILE)
-    if logo_data:
-        st.markdown(
-            f"""
-            <div style="display: flex; justify-content: center; align-items: center; width: 100%; margin-top: 10px;">
-                <img src="data:image/png;base64,{logo_data}" style="width: {width_px}px; height: auto;">
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- STYLE DESIGN ULTRA-ÉPURÉ ---
-st.markdown("""
+# --- ARCHITECTURE CSS (MINIFIÉE & OPTIMISÉE GPU) ---
+st.markdown(f"""
     <style>
-    .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
-    .stApp { background-color: #ffffff; color: #1e1e1e; font-family: 'Inter', sans-serif; }
-    
-    .hanna-main-title { 
-        font-weight: 200; 
-        letter-spacing: 10px; 
-        text-transform: uppercase; 
-        font-size: 28px; 
-        text-align: center; 
-        color: #000000;
-        margin-top: 10px;
-        margin-bottom: 2px;
-    }
-    
-    .hanna-sub-title {
-        font-weight: 300;
-        font-size: 10px;
-        text-align: center;
-        color: #999999;
-        letter-spacing: 1.5px;
-        margin-bottom: 25px;
-        text-transform: uppercase;
-    }
-
-    div.stTextInput > div > div > input {
-        text-align: center;
-        background-color: #fcfcfc !important;
-        border: 1px solid #f0f0f0 !important;
-        border-radius: 8px !important;
-        height: 45px !important;
-    }
-
-    .stButton > button {
-        width: 100% !important;
-        background-color: transparent !important;
-        color: #ccc !important;
-        border: 1px solid #eee !important;
-        font-size: 10px !important;
-        letter-spacing: 1px !important;
-        height: 35px !important;
-    }
-    .stButton > button:hover { color: #000 !important; border-color: #000 !important; }
-
-    #MainMenu, footer, header { visibility: hidden; }
+    .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
+    .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
+    .hanna-header {{ text-align: center; margin-bottom: 2rem; }}
+    .hanna-logo {{ width: 120px; margin-bottom: 10px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05)); }}
+    .hanna-title {{ font-weight: 200; letter-spacing: 10px; font-size: 28px; color: #000; text-transform: uppercase; margin: 0; }}
+    .hanna-sub {{ font-weight: 300; font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }}
+    div.stTextInput > div > div > input {{ text-align: center; border-radius: 8px; height: 45px; border: 1px solid #eee; background: #fafafa; }}
+    .stButton > button {{ width: 100%; background: transparent; color: #ccc; border: 1px solid #eee; font-size: 10px; letter-spacing: 1px; height: 35px; transition: 0.3s; }}
+    .stButton > button:hover {{ color: #000; border-color: #000; background: #fff; }}
+    #MainMenu, footer, header {{ visibility: hidden; }}
     </style>
-    """, unsafe_allow_html=True)
+    <div class="hanna-header">
+        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        <p class="hanna-title">HANNA</p>
+        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
+    </div>
+""", unsafe_allow_html=True)
 
-# --- LOGIQUE DE SESSION ---
-if "auth" not in st.session_state:
-    st.session_state.auth = False
-if 'notes' not in st.session_state:
-    st.session_state.notes = []
+# --- INITIALISATION ÉTAT ---
+for key in ['auth', 'notes']:
+    if key not in st.session_state:
+        st.session_state[key] = False if key == 'auth' else []
 
-# --- FONCTION DE CAPTURE (CALLBACK) ---
-def handle_capture():
-    val = st.session_state.input_note
-    if val:
-        timestamp = datetime.now().strftime("%H:%M")
-        st.session_state.notes.append(f"[{timestamp}] {val}")
-        # On vide le champ proprement
-        st.session_state.input_note = ""
+# --- MOTEUR DE CAPTURE ---
+def process_entry():
+    if st.session_state.entry:
+        ts = datetime.now().strftime("%H:%M")
+        st.session_state.notes.append(f"[{ts}] {st.session_state.entry}")
+        st.session_state.entry = "" # Reset automatique sécurisé
 
-# --- PAGE DE CONNEXION ---
+# --- LOGIQUE DE ROUTAGE ---
 if not st.session_state.auth:
-    st.write("")
-    display_centered_logo(120)
-    st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-    st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
-    
-    pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
+    # Page Connexion
+    pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     if pwd:
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
             st.rerun()
         else:
             st.error("Accès refusé.")
-    st.stop()
+else:
+    # Page Principale
+    st.divider()
+    st.text_input("CAPTURE", label_visibility="collapsed", placeholder="Demandez à HANNA", 
+                  key="entry", on_change=process_entry)
 
-# --- PAGE PRINCIPALE ---
-display_centered_logo(120)
-st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
-st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
+    # Affichage optimisé des notes (Reverse Loop)
+    for note in reversed(st.session_state.notes):
+        st.info(note)
 
-st.divider()
-
-# Utilisation du paramètre on_change pour valider sans bouton
-st.text_input("CAPTURE", label_visibility="collapsed", placeholder="Demandez à HANNA", 
-              key="input_note", on_change=handle_capture)
-
-if st.session_state.notes:
-    for n in reversed(st.session_state.notes):
-        st.info(n)
-
-st.write("")
-if st.button("QUITTER LA SESSION"):
-    st.session_state.clear()
-    st.rerun()
+    st.write("---")
+    if st.button("QUITTER LA SESSION"):
+        st.session_state.clear()
+        st.rerun()
