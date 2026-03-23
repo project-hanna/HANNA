@@ -5,7 +5,7 @@ import base64
 
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
-LOGO_FILE = "logo2.png"
+LOGO_FILE = "logo1.png"
 PROJECT_NAME = "Projet HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
