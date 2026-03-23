@@ -1,4 +1,4 @@
-import streamlit as st  # <-- Correction faite ici
+import streamlit as st
 from datetime import datetime
 import os
 
@@ -8,67 +8,69 @@ LOGO_FILE = "logo2.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE MICRO-TYPOGRAPHIE (Luxe & Compact) ---
+# --- STYLE MICRO-DESIGN ABSOLU ---
 st.markdown("""
     <style>
-    /* Nettoyage des marges pour un bloc compact */
-    .block-container { padding-top: 1.5rem !important; max-width: 320px !important; }
+    /* Compression maximale du bloc central */
+    .block-container { padding-top: 1rem !important; max-width: 280px !important; }
     .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
-    /* Logo centré */
-    [data-testid="stImage"] { display: flex !important; justify-content: center !important; margin-bottom: -15px !important; }
+    /* Logo centré et discret */
+    [data-testid="stImage"] { display: flex !important; justify-content: center !important; margin-bottom: -20px !important; }
     
-    /* Titre HANNA : Ultra-fin */
+    /* Titre HANNA : Minimalisme pur */
     .hanna-main-title { 
         font-weight: 100; 
-        letter-spacing: 16px; 
+        letter-spacing: 18px; 
         text-transform: uppercase; 
-        font-size: 20px; 
+        font-size: 18px; 
         text-align: center; 
         color: #000000;
-        margin-bottom: 2px;
+        margin-bottom: 0px;
     }
     
-    /* Sous-titre micro */
+    /* Sous-titre invisible ou presque */
     .hanna-sub-title {
         font-weight: 300;
-        font-size: 8px;
+        font-size: 7px;
         text-align: center;
-        color: #cccccc;
-        letter-spacing: 0.8px;
-        margin-bottom: 25px;
+        color: #dddddd;
+        letter-spacing: 0.5px;
+        margin-bottom: 20px;
         text-transform: uppercase;
     }
 
-    /* Champ de saisie : Très fin et droit */
+    /* Champ de saisie : Ligne ultra-fine */
     div.stTextInput > div > div > input {
         text-align: center;
-        border: 1px solid #f5f5f5 !important;
+        border: 1px solid #f8f8f8 !important;
+        border-bottom: 1px solid #eeeeee !important; /* Effet ligne */
         border-radius: 0px !important;
-        height: 30px !important;
-        font-size: 9px !important;
-        letter-spacing: 2px !important;
+        height: 28px !important;
+        font-size: 8px !important;
+        letter-spacing: 3px !important;
         text-transform: uppercase;
         background-color: #ffffff !important;
         color: #000 !important;
     }
     
-    /* Bouton AUTHORIZE : Micro-typographie bijou */
+    /* Bouton AUTHORIZE : Micro-Typographie (Le plus petit possible) */
     .stButton > button {
         width: 100% !important;
         background-color: #000000 !important;
         color: #ffffff !important;
         border: none !important;
         font-weight: 200 !important; 
-        letter-spacing: 6px !important; /* Espacement extrême */
-        font-size: 7.5px !important; /* Taille minuscule */
-        height: 28px !important; 
+        letter-spacing: 10px !important; /* Espacement extrême pour le chic */
+        font-size: 6px !important; /* TAILLE ULTRA-MICRO */
+        height: 24px !important; /* Hauteur minimaliste */
         border-radius: 0px !important;
-        margin-top: -15px !important;
+        margin-top: -18px !important;
         text-transform: uppercase !important;
         transition: 0.5s;
+        padding-left: 10px !important; /* Pour compenser l'espacement à droite */
     }
-    .stButton > button:hover { background-color: #555555 !important; }
+    .stButton > button:hover { background-color: #444444 !important; letter-spacing: 12px !important; }
 
     /* Masquage interface Streamlit */
     #MainMenu, footer, header { visibility: hidden; }
@@ -80,17 +82,17 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
-    col1, col2, col3 = st.columns([1, 1.1, 1])
+    col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         if os.path.exists(LOGO_FILE):
             st.image(LOGO_FILE, use_container_width=True)
         else:
-            st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
+            st.write("") # Espace si logo absent
 
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
-    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER CODE")
+    pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="CODE")
     
     if st.button("AUTHORIZE"):
         if pwd == PASSWORD_SYSTEM:
@@ -101,7 +103,7 @@ if not st.session_state.auth:
     st.stop()
 
 # --- INTERFACE PRINCIPALE ---
-st.markdown('<div style="font-weight:100; letter-spacing:5px; font-size:16px; text-align:center;">HANNA</div>', unsafe_allow_html=True)
+st.markdown('<div style="font-weight:100; letter-spacing:8px; font-size:14px; text-align:center;">HANNA</div>', unsafe_allow_html=True)
 st.divider()
 
 if 'notes' not in st.session_state:
