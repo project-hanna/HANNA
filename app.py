@@ -6,7 +6,7 @@ import base64
 # --- CONFIGURATION SÉCURISÉE ---
 PASSWORD_SYSTEM = "mtt.mallee@gmail.C94"
 LOGO_FILE = "logo1.png"
-PROJECT_NAME = "Projet HANNA"
+PROJECT_NAME = "PROJET HANNA"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
@@ -85,12 +85,10 @@ if not st.session_state.auth:
     # --- PAGE 1 (SANS CHANGEMENT) ---
     st.write("")
     display_centered_logo(LOGO_FILE, 120)
-
     st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
     pwd = st.text_input("Code", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
-    
     if st.button("ENTRER"):
         if pwd == PASSWORD_SYSTEM:
             st.session_state.auth = True
@@ -99,10 +97,10 @@ if not st.session_state.auth:
             st.error("Accès refusé.")
     st.stop()
 
-# --- PAGE 2 (HARMONISÉE SUR LA PAGE 1) ---
+# --- PAGE 2 (DÉSORMAIS HARMONISÉE) ---
 display_centered_logo(LOGO_FILE, 60)
 
-# Titre et sous-titre désormais centrés et identiques à l'accueil
+# Titre et sous-titre centrés
 st.markdown(f'<div class="hanna-main-title">{PROJECT_NAME}</div>', unsafe_allow_html=True)
 st.markdown(f'<div class="hanna-sub-title">SYSTÈME OPÉRATIONNEL | {datetime.now().strftime("%H:%M")}</div>', unsafe_allow_html=True)
 
