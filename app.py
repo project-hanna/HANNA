@@ -30,18 +30,26 @@ st.markdown(f"""
     .hanna-header {{ text-align: center; margin-bottom: 1.5rem; }}
     .hanna-logo {{ width: 120px; margin-bottom: 5px; }}
     
-    /* TITRE AGRANDI */
+    /* TITRE XXL */
     .hanna-title {{ 
         font-weight: 200; 
-        letter-spacing: 12px; 
-        font-size: 42px; 
+        letter-spacing: 14px; 
+        font-size: 52px; 
         color: #000; 
         text-transform: uppercase; 
         margin: 0; 
-        line-height: 1.2;
+        line-height: 1.1;
     }}
     
-    .hanna-sub {{ font-weight: 300; font-size: 10px; color: #999; letter-spacing: 1.5px; text-transform: uppercase; }}
+    /* SOUS-TITRE RÉDUIT (8px) */
+    .hanna-sub {{ 
+        font-weight: 300; 
+        font-size: 8px; 
+        color: #999; 
+        letter-spacing: 2px; 
+        text-transform: uppercase; 
+        margin-top: 5px;
+    }}
 
     /* Inputs Design */
     div.stTextInput > div > div > input {{ text-align: center; border-radius: 8px; height: 45px; border: 1px solid #eee; background: #fafafa; }}
@@ -82,7 +90,7 @@ def process_entry():
 
 # --- LOGIQUE DE ROUTAGE ---
 if not st.session_state.auth:
-    # Page Connexion (L'icône sera à gauche ici)
+    # Page Connexion
     pwd = st.text_input("CODE", type="password", label_visibility="collapsed", placeholder="CODE D'ACCÈS")
     if pwd:
         if pwd == PASSWORD_SYSTEM:
