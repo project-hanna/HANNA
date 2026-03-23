@@ -8,19 +8,17 @@ LOGO_FILE = "logo2.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# --- STYLE ÉLÉGANT & CENTRAGE ---
+# --- STYLE COMPACT (Suppression de l'espace haut) ---
 st.markdown("""
     <style>
+    /* Suppression du padding haut de Streamlit */
+    .block-container { padding-top: 1rem !important; padding-bottom: 0rem !important; }
     .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
     /* Centrage horizontal du logo */
-    [data-testid="stImage"] {
-        display: flex !important;
-        justify-content: center !important;
-        width: 100% !important;
-    }
+    [data-testid="stImage"] { display: flex !important; justify-content: center !important; width: 100% !important; }
     
-    /* Titre HANNA : Espacement large */
+    /* Titre HANNA : Rapprochement du logo */
     .hanna-main-title { 
         font-weight: 200; 
         letter-spacing: 12px; 
@@ -28,7 +26,7 @@ st.markdown("""
         font-size: 32px; 
         text-align: center; 
         color: #000000;
-        margin-top: 10px;
+        margin-top: -10px; /* Remonte le texte vers le logo */
         margin-bottom: 5px;
     }
     
@@ -39,7 +37,7 @@ st.markdown("""
         text-align: center;
         color: #999999;
         letter-spacing: 1.5px;
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         text-transform: uppercase;
     }
 
@@ -61,7 +59,6 @@ st.markdown("""
         height: 45px;
         border-radius: 4px;
     }
-    .stButton > button:hover { background-color: #222222; }
 
     /* Masquage interface Streamlit */
     #MainMenu, footer, header { visibility: hidden; }
@@ -73,9 +70,7 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
-    st.write("")
-    
-    # Utilisation de colonnes pour forcer le logo à 50% de la largeur centrale
+    # Utilisation de colonnes pour un logo à taille maîtrisée (50% de l'espace central)
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if os.path.exists(LOGO_FILE):
