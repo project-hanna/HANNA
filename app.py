@@ -13,16 +13,11 @@ st.markdown("""
     <style>
     .stApp { background-color: #ffffff; color: #333333; font-family: 'Inter', sans-serif; }
     
-    /* Centrage horizontal du logo et du conteneur d'image */
-    .stImage {
-        display: flex !important;
-        justify-content: center !important;
-        align-items: center !important;
-        width: 100% !important;
-    }
-    .stImage > div {
-        display: flex !important;
-        justify-content: center !important;
+    /* Centrage horizontal du logo */
+    [data-testid="stImage"] {
+        display: flex;
+        justify-content: center;
+        width: 100%;
     }
     
     /* Titre HANNA : Espacement large */
@@ -30,7 +25,7 @@ st.markdown("""
         font-weight: 200; 
         letter-spacing: 12px; 
         text-transform: uppercase; 
-        font-size: clamp(24px, 5vw, 32px); 
+        font-size: 32px; 
         text-align: center; 
         color: #000000;
         margin-top: 20px;
@@ -41,7 +36,7 @@ st.markdown("""
     /* Sous-titre complet */
     .hanna-sub-title {
         font-weight: 300;
-        font-size: clamp(10px, 3vw, 11px);
+        font-size: 11px;
         text-align: center;
         color: #999999;
         letter-spacing: 1.5px;
@@ -80,17 +75,17 @@ if "auth" not in st.session_state:
     st.session_state.auth = False
 
 if not st.session_state.auth:
-    # Espacement pour descendre un peu le contenu
     st.write("")
     st.write("")
     
-    # Bloc central
+    # Bloc central Logo
     if os.path.exists(LOGO_FILE):
         st.image(LOGO_FILE, width=160)
     else:
         st.markdown("<h1 style='text-align:center;'>🛡️</h1>", unsafe_allow_html=True)
 
-    st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_index=False, unsafe_allow_html=True)
+    # Titres (Correction de la ligne 93 : suppression de unsafe_allow_index)
+    st.markdown('<div class="hanna-main-title">HANNA</div>', unsafe_allow_html=True)
     st.markdown('<div class="hanna-sub-title">Hybrid Adaptive Navigator & Network Assistant</div>', unsafe_allow_html=True)
     
     pwd = st.text_input("ACCESS CODE", type="password", label_visibility="collapsed", placeholder="ENTER ACCESS CODE")
