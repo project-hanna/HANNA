@@ -8,11 +8,11 @@ LOGO_FILE = "logo1.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# Initialisation sécurisée de l'API avec le modèle standard gemini-pro
+# Initialisation sécurisée de l'API
 if "GOOGLE_API_KEY" in st.secrets:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-    # Changement ici : 'gemini-pro' est plus compatible que '1.5-flash' pour le moment
-    model = genai.GenerativeModel('gemini-pro')
+    # Utilisation du nom de modèle le plus à jour et compatible
+    model = genai.GenerativeModel('gemini-1.5-flash-latest')
 else:
     st.error("Clé GOOGLE_API_KEY manquante dans les Secrets Streamlit.")
 
@@ -26,7 +26,7 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS ---
+# --- ARCHITECTURE CSS (v10.00) ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
@@ -60,8 +60,14 @@ user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility
 if user_input:
     try:
         with st.spinner(""):
+            # Appel direct à generate_content
             response = model.generate_content(user_input)
+            
+            # Vérification de la présence de texte dans la réponse
             if response.text:
                 st.markdown(f'<div class="hanna-response">{response.text}</div>', unsafe_allow_html=True)
+            else:
+                st.warning("Réponse vide de l'IA.")
     except Exception as e:
+        # Affiche l'erreur si elle persiste
         st.error(f"Erreur technique : {e}")
