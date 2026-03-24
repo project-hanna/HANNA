@@ -6,7 +6,7 @@ import os
 # --- CONFIGURATION ---
 LOGO_FILE = "logo1.png"
 
-st.set_page_config(page_title="HANNA", layout="centered")
+st.set_config(page_title="HANNA", layout="centered")
 
 @st.cache_data
 def get_ui_elements(file_path):
@@ -25,17 +25,16 @@ st.markdown(f"""
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    /* Centrage Absolu du Header */
+    /* Centrage Global du Header */
     .hanna-header {{ 
         text-align: center; 
         margin-bottom: 2rem; 
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
     }}
     
-    /* Style et Centrage du Logo */
+    /* Centrage du Logo */
     .hanna-logo-wrapper {{
         display: flex;
         justify-content: center;
@@ -47,6 +46,7 @@ st.markdown(f"""
         width: 120px; 
     }}
     
+    /* Centrage Parfait de HANNA (Compensation du letter-spacing) */
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
@@ -55,7 +55,9 @@ st.markdown(f"""
         text-transform: uppercase; 
         margin: 0; 
         line-height: 1.1;
-        padding-left: 14px; /* Équilibre le letter-spacing à droite */
+        padding-left: 14px; /* Force le centrage réel en compensant l'espace à droite */
+        width: 100%;
+        text-align: center;
     }}
     
     .hanna-sub {{ 
@@ -65,6 +67,9 @@ st.markdown(f"""
         letter-spacing: 2px; 
         text-transform: uppercase; 
         margin-top: 5px;
+        padding-left: 2px; /* Compensation du letter-spacing du sous-titre */
+        width: 100%;
+        text-align: center;
     }}
 
     /* Inputs Design */
@@ -97,9 +102,8 @@ st.markdown(f"""
     </div>
     """, unsafe_allow_html=True)
 
-# Champ de saisie avec le nouveau placeholder
 user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
 
 if user_input:
-    # Traitement
+    # Logique de traitement
     pass
