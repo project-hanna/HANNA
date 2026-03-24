@@ -18,7 +18,7 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS RÉPARÉE ---
+# --- ARCHITECTURE CSS UNIVERSELLE (PC & MOBILE) ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
@@ -38,7 +38,7 @@ st.markdown(f"""
         margin-bottom: 3rem; 
     }}
     
-    /* RÉPARATION FINALE DU CENTRAGE */
+    /* RÉPARATION FINALE MOBILE & PC */
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
@@ -48,11 +48,11 @@ st.markdown(f"""
         margin: 0; 
         line-height: 1.1;
         
-        /* TECHNIQUE DE CENTRAGE ABSOLU */
-        text-indent: 14px; /* Cette ligne pousse le texte vers la droite de la valeur exacte de l'espacement */
+        /* Technique de l'annulation de l'espace final */
+        display: inline-block;
+        margin-right: -14px; /* On annule l'espace fantôme de la dernière lettre */
         width: 100%;
         text-align: center;
-        display: block;
     }}
     
     .hanna-sub {{ 
@@ -62,7 +62,10 @@ st.markdown(f"""
         letter-spacing: 2px; 
         text-transform: uppercase; 
         margin-top: 10px;
-        text-indent: 2px; /* Compensation pour le sous-titre */
+        
+        /* Même technique pour le sous-titre */
+        display: inline-block;
+        margin-right: -2px;
         width: 100%;
         text-align: center;
     }}
