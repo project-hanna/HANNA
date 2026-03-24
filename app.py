@@ -19,17 +19,27 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS BDD 10.00 ---
+# --- ARCHITECTURE CSS ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    .hanna-header {{ text-align: center; margin-bottom: 2rem; }}
+    /* Centrage du Header et du Logo */
+    .hanna-header {{ 
+        text-align: center; 
+        margin-bottom: 2rem; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }}
     
     .hanna-logo {{ 
         width: 120px; 
         margin-bottom: 3rem; 
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }}
     
     .hanna-title {{ 
@@ -51,6 +61,7 @@ st.markdown(f"""
         margin-top: 5px;
     }}
 
+    /* Inputs Design */
     div.stTextInput > div > div > input {{ 
         text-align: center; 
         border-radius: 8px; 
@@ -65,13 +76,6 @@ st.markdown(f"""
         box-shadow: none;
     }}
 
-    .stInfo {{
-        background-color: #ffffff;
-        border: 1px solid #eee;
-        color: #999;
-        border-radius: 8px;
-    }}
-
     #MainMenu, footer, header {{visibility: hidden;}}
     </style>
     """, unsafe_allow_html=True)
@@ -81,11 +85,13 @@ st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
-        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant • V10.00</p>
+        <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
     """, unsafe_allow_html=True)
 
-user_input = st.text_input("", placeholder="...", label_visibility="collapsed")
+# Nouveau texte d'appel à l'action
+user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
 
 if user_input:
-    st.info(f"Système v10.00 : {user_input}")
+    # Logique de traitement
+    pass
