@@ -19,14 +19,17 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS ---
+# --- ARCHITECTURE CSS RÉPARÉE ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    /* Header & Logo */
-    .hanna-header {{ text-align: center; margin-bottom: 2rem; }}
+    .hanna-header {{ 
+        text-align: center; 
+        margin-bottom: 2rem; 
+        width: 100%;
+    }}
     
     .hanna-logo {{ 
         width: 120px; 
@@ -36,7 +39,7 @@ st.markdown(f"""
         margin-right: auto;
     }}
     
-    /* Centrage de HANNA : Compensation du décalage letter-spacing */
+    /* RÉPARATION CENTRAGE HANNA */
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
@@ -45,9 +48,12 @@ st.markdown(f"""
         text-transform: uppercase; 
         margin: 0; 
         line-height: 1.1;
-        padding-left: 14px; /* AJOUT CRUCIAL : Compense l'espace de 14px à droite du dernier A */
-        text-align: center;
+        
+        /* Correction cruciale : */
+        padding-left: 14px; /* On rajoute à gauche ce que le letter-spacing crée à droite */
+        display: block;
         width: 100%;
+        text-align: center;
     }}
     
     .hanna-sub {{ 
@@ -57,9 +63,8 @@ st.markdown(f"""
         letter-spacing: 2px; 
         text-transform: uppercase; 
         margin-top: 5px;
-        padding-left: 2px; /* Compensation proportionnelle pour le sous-titre */
+        padding-left: 2px; /* Correction proportionnelle pour le sous-titre */
         text-align: center;
-        width: 100%;
     }}
 
     /* Inputs Design */
@@ -91,7 +96,3 @@ st.markdown(f"""
     """, unsafe_allow_html=True)
 
 user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
-
-if user_input:
-    # Logique de traitement ici
-    pass
