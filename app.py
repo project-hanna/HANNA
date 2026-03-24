@@ -8,11 +8,21 @@ LOGO_FILE = "logo1.png"
 
 st.set_page_config(page_title="HANNA", layout="centered")
 
-# Initialisation sécurisée de l'API
+# Initialisation et Détection Automatique du Modèle
 if "GOOGLE_API_KEY" in st.secrets:
     genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-    # Utilisation du nom de modèle le plus à jour et compatible
-    model = genai.GenerativeModel('gemini-1.5-flash-latest')
+    
+    try:
+        # HANNA cherche le meilleur modèle disponible sur votre compte
+        available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+        if available_models:
+            # On prend le premier modèle disponible (souvent gemini-pro ou gemini-1.5-flash)
+            selected_model = available_models[0]
+            model = genai.GenerativeModel(selected_model)
+        else:
+            st.error("Aucun modèle compatible trouvé sur votre compte Google AI.")
+    except Exception as e:
+        st.error(f"Erreur d'initialisation : {e}")
 else:
     st.error("Clé GOOGLE_API_KEY manquante dans les Secrets Streamlit.")
 
@@ -60,14 +70,8 @@ user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility
 if user_input:
     try:
         with st.spinner(""):
-            # Appel direct à generate_content
             response = model.generate_content(user_input)
-            
-            # Vérification de la présence de texte dans la réponse
             if response.text:
                 st.markdown(f'<div class="hanna-response">{response.text}</div>', unsafe_allow_html=True)
-            else:
-                st.warning("Réponse vide de l'IA.")
     except Exception as e:
-        # Affiche l'erreur si elle persiste
         st.error(f"Erreur technique : {e}")
