@@ -25,21 +25,26 @@ st.markdown(f"""
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    /* Centrage du Header et du Logo */
+    /* Centrage Absolu du Header */
     .hanna-header {{ 
         text-align: center; 
         margin-bottom: 2rem; 
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+    }}
+    
+    /* Style et Centrage du Logo */
+    .hanna-logo-wrapper {{
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        margin-bottom: 3rem;
     }}
     
     .hanna-logo {{ 
         width: 120px; 
-        margin-bottom: 3rem; 
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
     }}
     
     .hanna-title {{ 
@@ -50,6 +55,7 @@ st.markdown(f"""
         text-transform: uppercase; 
         margin: 0; 
         line-height: 1.1;
+        padding-left: 14px; /* Équilibre le letter-spacing à droite */
     }}
     
     .hanna-sub {{ 
@@ -83,15 +89,17 @@ st.markdown(f"""
 # --- RENDU ---
 st.markdown(f"""
     <div class="hanna-header">
-        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        <div class="hanna-logo-wrapper">
+            <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        </div>
         <h1 class="hanna-title">HANNA</h1>
         <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
     """, unsafe_allow_html=True)
 
-# Nouveau texte d'appel à l'action
+# Champ de saisie avec le nouveau placeholder
 user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
 
 if user_input:
-    # Logique de traitement
+    # Traitement
     pass
