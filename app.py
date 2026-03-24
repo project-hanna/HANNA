@@ -6,7 +6,6 @@ import os
 # --- CONFIGURATION ---
 LOGO_FILE = "logo1.png"
 
-# Configuration de la page (Corrected)
 st.set_page_config(page_title="HANNA", layout="centered")
 
 @st.cache_data
@@ -20,35 +19,24 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS BDD 10.00 ---
+# --- ARCHITECTURE CSS ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    /* Centrage Global du Header */
-    .hanna-header {{ 
-        text-align: center; 
-        margin-bottom: 2rem; 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }}
-    
-    /* Centrage du Logo */
-    .hanna-logo-wrapper {{
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin-bottom: 3rem;
-    }}
+    /* Header & Logo */
+    .hanna-header {{ text-align: center; margin-bottom: 2rem; }}
     
     .hanna-logo {{ 
         width: 120px; 
+        margin-bottom: 3rem; 
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }}
     
-    /* Centrage de HANNA (Compensation du letter-spacing) */
+    /* Centrage de HANNA : Compensation du décalage letter-spacing */
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
@@ -57,9 +45,9 @@ st.markdown(f"""
         text-transform: uppercase; 
         margin: 0; 
         line-height: 1.1;
-        padding-left: 14px; /* Équilibre l'espace vide à droite pour un centrage parfait */
-        width: 100%;
+        padding-left: 14px; /* AJOUT CRUCIAL : Compense l'espace de 14px à droite du dernier A */
         text-align: center;
+        width: 100%;
     }}
     
     .hanna-sub {{ 
@@ -69,12 +57,12 @@ st.markdown(f"""
         letter-spacing: 2px; 
         text-transform: uppercase; 
         margin-top: 5px;
-        padding-left: 2px; /* Équilibre le sous-titre */
-        width: 100%;
+        padding-left: 2px; /* Compensation proportionnelle pour le sous-titre */
         text-align: center;
+        width: 100%;
     }}
 
-    /* Inputs Design - Focus XXL */
+    /* Inputs Design */
     div.stTextInput > div > div > input {{ 
         text-align: center; 
         border-radius: 8px; 
@@ -89,25 +77,21 @@ st.markdown(f"""
         box-shadow: none;
     }}
 
-    /* Masquer les éléments Streamlit */
     #MainMenu, footer, header {{visibility: hidden;}}
     </style>
     """, unsafe_allow_html=True)
 
-# --- RENDU INTERFACE ---
+# --- RENDU ---
 st.markdown(f"""
     <div class="hanna-header">
-        <div class="hanna-logo-wrapper">
-            <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
-        </div>
+        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
         <h1 class="hanna-title">HANNA</h1>
         <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
     """, unsafe_allow_html=True)
 
-# Champ de saisie avec nouveau placeholder
 user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
 
 if user_input:
-    # Zone pour la future logique de réponse
-    st.info(f"Requête reçue : {user_input}")
+    # Logique de traitement ici
+    pass
