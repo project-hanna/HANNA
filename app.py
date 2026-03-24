@@ -34,14 +34,21 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS ---
+# --- ARCHITECTURE CSS (NETTOYAGE TOTAL) ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    /* Supprimer le texte d'aide */
-    div.stTextInput small {{ display: none !important; }}
+    /* SUPPRESSION RADICALE DU TEXTE "PRESS ENTER TO APPLY" ET DES INSTRUCTIONS */
+    div[data-testid="stInstructions"], 
+    div[data-testid="stTextInput"] small,
+    div[data-testid="stTextInput"] div[data-testid="InputInstructions"],
+    .st-emotion-cache-16idsys p {{
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+    }}
 
     .hanna-header {{ text-align: center; margin-bottom: 2rem; display: flex; flex-direction: column; align-items: center; width: 100%; }}
     .hanna-logo-wrapper {{ display: flex; justify-content: center; width: 100%; margin-bottom: 3.5rem; }}
@@ -54,22 +61,11 @@ st.markdown(f"""
         border-radius: 8px; height: 45px; border: 1px solid #eee; background: #fafafa; font-size: 16px;
     }}
     
-    /* Style du bouton d'envoi */
+    /* Bouton Noir */
     .stButton > button {{
-        border-radius: 8px;
-        height: 45px;
-        width: 100%;
-        background-color: #000;
-        color: white;
-        border: none;
-        transition: 0.3s;
+        border-radius: 8px; height: 45px; width: 100%; background-color: #000; color: white; border: none; transition: 0.3s;
     }}
-    
-    .stButton > button:hover {{
-        background-color: #333;
-        color: white;
-        border: none;
-    }}
+    .stButton > button:hover {{ background-color: #333; color: white; border: none; }}
 
     .hanna-response {{
         margin-top: 2rem; padding: 1.5rem; border-radius: 12px; background-color: #ffffff; border: 1px solid #f2f2f2; color: #333; font-size: 15px; line-height: 1.6;
@@ -90,18 +86,19 @@ st.markdown(f"""
     </div>
     """, unsafe_allow_html=True)
 
-# --- BARRE DE SAISIE AVEC BOUTON ---
+# --- BARRE DE SAISIE ---
 col1, col2 = st.columns([5, 1])
 
 with col1:
+    # On vide le label pour éviter tout texte parasite
     user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
 
 with col2:
     submit_clicked = st.button("→")
 
-# Déclenchement (soit par Entrée, soit par clic)
-if user_input or submit_clicked:
-    if user_input.strip() != "":
+# Logique de réponse
+if (user_input and user_input.strip() != "") or submit_clicked:
+    if user_input:
         try:
             with st.spinner(""):
                 response = model.generate_content(user_input)
