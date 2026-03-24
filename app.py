@@ -138,5 +138,6 @@ if user_input:
             
             # Affichage de la réponse dans le conteneur stylisé
             st.markdown(f'<div class="hanna-response">{response.text}</div>', unsafe_allow_html=True)
-    except Exception as e:
-        st.error("Une erreur est survenue lors de la communication avec Gemini.")
+except Exception as e:
+    st.error(f"Erreur détaillée : {e}")
+       
