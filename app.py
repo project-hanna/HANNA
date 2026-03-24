@@ -10,7 +10,7 @@ APP_SUB = "Hybrid Adaptive Navigator & Network Assistant"
 
 st.set_page_config(page_title=APP_NAME, layout="centered")
 
-# --- INITIALISATION ÉTAT DE SESSION (MÉMOIRE) ---
+# --- INITIALISATION MÉMOIRE INVISIBLE ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -39,13 +39,13 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS BDD11 + BOUTON RESET ---
+# --- ARCHITECTURE CSS BDD11 ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
-    /* Suppression radicale des textes d'aide Streamlit */
+    /* Suppression des éléments Streamlit */
     div[data-testid="stInstructions"], 
     div[data-testid="stTextInput"] small,
     div[data-testid="InputInstructions"],
@@ -57,17 +57,15 @@ st.markdown(f"""
     .hanna-title {{ font-weight: 200; letter-spacing: 14px; font-size: 52px; color: #000; text-transform: uppercase; margin: 0; line-height: 1.1; padding-left: 14px; text-align: center; }}
     .hanna-sub {{ font-weight: 300; font-size: 8px; color: #999; letter-spacing: 2px; text-transform: uppercase; margin-top: 5px; text-align: center; }}
 
-    /* Input & Bouton */
+    /* Input Design */
     div.stTextInput > div > div > input {{ border-radius: 8px; height: 40px; border: 1px solid #eee; background: #fafafa; }}
-    .stButton > button {{ border-radius: 8px; height: 40px; width: 40px !important; background-color: #000; color: white; border: none; }}
+    
+    /* Bouton d'envoi */
+    .stButton > button {{ border-radius: 8px; height: 40px; width: 40px !important; min-width: 40px !important; background-color: #000; color: white; border: none; }}
     .stButton > button:hover {{ background-color: #333; color: white; }}
 
-    /* Bouton Reset Discret (Bas de page) */
-    div[data-testid="column"]:last-child button {{
-        background: transparent !important; color: #ccc !important; border: none !important; font-size: 10px !important; width: auto !important;
-    }}
-
-    .hanna-response {{ margin-top: 2rem; padding: 1.5rem; border-radius: 12px; background-color: #ffffff; border: 1px solid #f2f2f2; font-size: 15px; }}
+    /* Zone de réponse */
+    .hanna-response {{ margin-top: 2rem; padding: 1.5rem; border-radius: 12px; background-color: #ffffff; border: 1px solid #f2f2f2; color: #333; font-size: 15px; line-height: 1.6; }}
 
     #MainMenu, footer, header {{visibility: hidden;}}
     </style>
@@ -91,29 +89,21 @@ with col1:
 with col2:
     submit_clicked = st.button("→")
 
-# --- LOGIQUE IA AVEC MÉMOIRE ---
+# --- LOGIQUE IA ---
 if (user_input and user_input.strip() != "") or submit_clicked:
     if user_input and model:
         try:
             with st.spinner(""):
-                # Construction du contexte (3 derniers échanges)
+                # On récupère le contexte des 3 derniers messages
                 history_context = "\n".join([f"Q: {m['q']}\nA: {m['a']}" for m in st.session_state.messages[-3:]])
                 prompt = f"{history_context}\nQ: {user_input}\nA:" if history_context else user_input
                 
                 response = model.generate_content(prompt)
                 
                 if response and response.text:
-                    # Stockage
+                    # Mise à jour de la mémoire de session
                     st.session_state.messages.append({"q": user_input, "a": response.text})
-                    # Affichage
+                    # Affichage de la réponse
                     st.markdown(f'<div class="hanna-response">{response.text}</div>', unsafe_allow_html=True)
         except Exception as e:
             st.error(f"Erreur : {e}")
-
-# --- PIED DE PAGE & RESET ---
-st.write("---")
-c1, c2 = st.columns([8, 2])
-with c2:
-    if st.button("Effacer la mémoire"):
-        st.session_state.messages = []
-        st.rerun()
