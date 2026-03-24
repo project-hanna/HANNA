@@ -6,7 +6,6 @@ import time
 
 # --- CONFIGURATION BDD-V10.3 ---
 LOGO_FILE = "logo1.png"
-
 st.set_page_config(page_title="HANNA", layout="centered")
 
 @st.cache_data
@@ -19,16 +18,15 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS BDD-V10.3 ---
+# --- ARCHITECTURE CSS (CHAT CLASSIQUE) ---
 st.markdown(f"""
     <style>
-    .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
+    .block-container {{ padding: 1rem 1rem 0; max-width: 550px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
     .hanna-header {{ text-align: center; margin-bottom: 2rem; width: 100%; }}
-    .hanna-logo {{ width: 140px; margin-bottom: 3rem; display: block; margin-left: auto; margin-right: auto; }}
+    .hanna-logo {{ width: 140px; margin-bottom: 2.5rem; display: block; margin-left: auto; margin-right: auto; }}
     
-    /* Centrage universel (PC & Android) */
     .hanna-title {{ 
         font-weight: 200; font-size: 52px; color: #000; 
         text-transform: uppercase; margin: 0; line-height: 1.1;
@@ -41,24 +39,36 @@ st.markdown(f"""
         text-align: center; width: 100%;
     }}
 
-    /* Input Design */
-    div.stTextInput > div > div > input {{ 
-        text-align: center; border-radius: 8px; height: 45px; 
-        border: 1px solid #eee; background: #fafafa; font-size: 16px;
+    /* Styles des bulles de Chat */
+    .chat-container {{ margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }}
+    
+    .bubble {{ 
+        padding: 12px 18px; border-radius: 18px; font-size: 15px; 
+        max-width: 85%; line-height: 1.4; animation: fadeIn 0.3s ease;
+    }}
+    
+    .user-bubble {{ 
+        align-self: flex-end; background-color: #f0f0f0; color: #333; 
+        border-bottom-right-radius: 4px; 
+    }}
+    
+    .hanna-bubble {{ 
+        align-self: flex-start; background-color: #ffffff; color: #000; 
+        border: 1px solid #eee; border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }}
 
-    /* Style de réponse HANNA */
-    .hanna-response {{
-        margin-top: 2rem; padding: 1.5rem; border-radius: 12px;
-        background-color: #fcfcfc; border: 1px solid #f0f0f0;
-        color: #333; font-size: 15px; line-height: 1.6;
-        animation: fadeIn 0.5s ease-in-out;
-    }}
-
-    @keyframes fadeIn {{ from {{ opacity: 0; }} to {{ opacity: 1; }} }}
+    /* Fixation de l'input en bas de page (optionnel) */
+    div.stChatInput {{ margin-top: 2rem; }}
+    
+    @keyframes fadeIn {{ from {{ opacity: 0; transform: translateY(10px); }} to {{ opacity: 1; transform: translateY(0); }} }}
     #MainMenu, footer, header {{visibility: hidden;}}
     </style>
     """, unsafe_allow_html=True)
+
+# --- INITIALISATION DE L'HISTORIQUE ---
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
 # --- RENDU HEADER ---
 st.markdown(f"""
@@ -69,31 +79,21 @@ st.markdown(f"""
     </div>
     """, unsafe_allow_html=True)
 
-# --- LOGIQUE DE TRAITEMENT ---
-def process_hanna_logic(query):
-    """Simule la réflexion de HANNA avant réponse."""
-    # Ici, nous connecterons ton API ou ton moteur de règles plus tard
-    if "bonjour" in query.lower():
-        return "Bonjour. Système HANNA opérationnel. En quoi puis-je vous assister aujourd'hui ?"
-    elif "heure" in query.lower():
-        return f"Il est actuellement {datetime.now().strftime('%H:%M')}."
-    else:
-        return f"Analyse de la requête : '{query}'. En attente d'instructions complémentaires sur le protocole BDD-V10.3."
+# --- AFFICHAGE DE LA CONVERSATION ---
+for message in st.session_state.messages:
+    role_class = "user-bubble" if message["role"] == "user" else "hanna-bubble"
+    st.markdown(f"""<div class="bubble {role_class}">{message["content"]}</div>""", unsafe_allow_html=True)
 
-# --- ZONE DE SAISIE ---
-user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
-
-if user_input:
+# --- ZONE DE SAISIE (STREAMLIT CHAT INPUT) ---
+if prompt := st.chat_input("Demander à HANNA"):
+    # Ajout du message utilisateur
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # Génération de la réponse HANNA (Logique BDD-V10.3)
     with st.spinner(''):
-        # On simule un léger délai pour l'aspect "Adaptive Assistant"
-        time.sleep(0.5)
-        response = process_hanna_logic(user_input)
+        time.sleep(0.4)
+        # Logique de réponse temporaire
+        response = f"Système HANNA v10.3 en ligne. Analyse de : '{prompt}'..."
         
-    st.markdown(f"""
-        <div class="hanna-response">
-            {response}
-        </div>
-        """, unsafe_allow_html=True)
-
-# Optionnel : Affichage du status BDD discret en bas
-st.markdown("<br><br><p style='text-align:center; color:#eee; font-size:9px;'>BDD-V10.3 ACTIVE</p>", unsafe_allow_html=True)
+    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.rerun()
