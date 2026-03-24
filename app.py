@@ -1,12 +1,20 @@
 import streamlit as st
-from datetime import datetime
+import google.generativeai as genai
 import base64
 import os
 
-# --- CONFIGURATION ---
+# --- CONFIGURATION HANNA ---
 LOGO_FILE = "logo1.png"
 
+# Configuration de la page
 st.set_page_config(page_title="HANNA", layout="centered")
+
+# Initialisation du moteur Gemini via les Secrets
+try:
+    genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
+    model = genai.GenerativeModel('gemini-1.5-flash')
+except Exception as e:
+    st.error("Configuration de la clé API manquante dans les Secrets.")
 
 @st.cache_data
 def get_ui_elements(file_path):
@@ -19,12 +27,13 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS BDD 10.00 ---
+# --- ARCHITECTURE CSS (DESIGN v10.00) ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
+    /* Centrage Global du Header */
     .hanna-header {{ 
         text-align: center; 
         margin-bottom: 2rem; 
@@ -34,17 +43,19 @@ st.markdown(f"""
         width: 100%;
     }}
     
+    /* Logo Centré */
     .hanna-logo-wrapper {{
         display: flex;
         justify-content: center;
         width: 100%;
-        margin-bottom: 3.5rem;
+        margin-bottom: 3rem;
     }}
     
     .hanna-logo {{ 
         width: 120px; 
     }}
     
+    /* Titre HANNA Centré (Compensation letter-spacing) */
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
@@ -72,6 +83,7 @@ st.markdown(f"""
         text-align: center;
     }}
 
+    /* Input Design */
     div.stTextInput > div > div > input {{ 
         text-align: center; 
         border-radius: 8px; 
@@ -86,11 +98,24 @@ st.markdown(f"""
         box-shadow: none;
     }}
 
+    /* Style de la réponse Gemini */
+    .hanna-response {{
+        margin-top: 2rem;
+        padding: 1.5rem;
+        border-radius: 12px;
+        background-color: #ffffff;
+        border: 1px solid #f0f0f0;
+        color: #444;
+        font-size: 15px;
+        line-height: 1.6;
+    }}
+
+    /* Masquer les éléments Streamlit */
     #MainMenu, footer, header {{visibility: hidden;}}
     </style>
     """, unsafe_allow_html=True)
 
-# --- RENDU ---
+# --- RENDU INTERFACE ---
 st.markdown(f"""
     <div class="hanna-header">
         <div class="hanna-logo-wrapper">
@@ -101,7 +126,17 @@ st.markdown(f"""
     </div>
     """, unsafe_allow_html=True)
 
+# Champ de saisie
 user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
 
+# --- LOGIQUE DE RÉPONSE ---
 if user_input:
-    st.write(f"Commande reçue : {user_input}")
+    try:
+        with st.spinner(""):
+            # Envoi de la requête à Gemini
+            response = model.generate_content(user_input)
+            
+            # Affichage de la réponse dans le conteneur stylisé
+            st.markdown(f'<div class="hanna-response">{response.text}</div>', unsafe_allow_html=True)
+    except Exception as e:
+        st.error("Une erreur est survenue lors de la communication avec Gemini.")
