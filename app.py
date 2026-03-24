@@ -10,7 +10,6 @@ st.set_page_config(page_title="HANNA", layout="centered")
 
 @st.cache_data
 def get_ui_elements(file_path):
-    """Mise en cache du logo pour une vitesse d'exécution maximale."""
     logo_b64 = ""
     if os.path.exists(file_path):
         with open(file_path, "rb") as f:
@@ -29,17 +28,17 @@ st.markdown(f"""
         text-align: center; 
         margin-bottom: 2rem; 
         width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }}
     
     .hanna-logo {{ 
-        width: 120px; 
+        width: 140px; 
         margin-bottom: 3rem; 
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
     }}
     
-    /* RÉPARATION CENTRAGE HANNA */
+    /* RÉPARATION FINALE DU CENTRAGE */
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
@@ -49,11 +48,11 @@ st.markdown(f"""
         margin: 0; 
         line-height: 1.1;
         
-        /* Correction cruciale : */
-        padding-left: 14px; /* On rajoute à gauche ce que le letter-spacing crée à droite */
-        display: block;
+        /* TECHNIQUE DE CENTRAGE ABSOLU */
+        text-indent: 14px; /* Cette ligne pousse le texte vers la droite de la valeur exacte de l'espacement */
         width: 100%;
         text-align: center;
+        display: block;
     }}
     
     .hanna-sub {{ 
@@ -62,8 +61,9 @@ st.markdown(f"""
         color: #999; 
         letter-spacing: 2px; 
         text-transform: uppercase; 
-        margin-top: 5px;
-        padding-left: 2px; /* Correction proportionnelle pour le sous-titre */
+        margin-top: 10px;
+        text-indent: 2px; /* Compensation pour le sous-titre */
+        width: 100%;
         text-align: center;
     }}
 
@@ -75,11 +75,6 @@ st.markdown(f"""
         border: 1px solid #eee; 
         background: #fafafa; 
         font-size: 16px;
-    }}
-    
-    div.stTextInput > div > div > input:focus {{
-        border-color: #000;
-        box-shadow: none;
     }}
 
     #MainMenu, footer, header {{visibility: hidden;}}
