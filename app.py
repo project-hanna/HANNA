@@ -18,7 +18,7 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS UNIVERSELLE (PC & MOBILE) ---
+# --- ARCHITECTURE CSS (NETTOYÉE DU DÉCALAGE) ---
 st.markdown(f"""
     <style>
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
@@ -28,49 +28,38 @@ st.markdown(f"""
         text-align: center; 
         margin-bottom: 2rem; 
         width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
     }}
     
     .hanna-logo {{ 
         width: 140px; 
         margin-bottom: 3rem; 
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }}
     
-    /* RÉPARATION FINALE MOBILE & PC */
+    /* Plus de letter-spacing ici pour éviter le décalage mobile */
     .hanna-title {{ 
         font-weight: 200; 
-        letter-spacing: 14px; 
         font-size: 52px; 
         color: #000; 
         text-transform: uppercase; 
         margin: 0; 
         line-height: 1.1;
-        
-        /* Technique de l'annulation de l'espace final */
-        display: inline-block;
-        margin-right: -14px; /* On annule l'espace fantôme de la dernière lettre */
-        width: 100%;
         text-align: center;
+        width: 100%;
     }}
     
     .hanna-sub {{ 
         font-weight: 300; 
         font-size: 8px; 
         color: #999; 
-        letter-spacing: 2px; 
         text-transform: uppercase; 
         margin-top: 10px;
-        
-        /* Même technique pour le sous-titre */
-        display: inline-block;
-        margin-right: -2px;
-        width: 100%;
         text-align: center;
+        width: 100%;
     }}
 
-    /* Inputs Design */
     div.stTextInput > div > div > input {{ 
         text-align: center; 
         border-radius: 8px; 
@@ -84,11 +73,12 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- RENDU ---
+# --- RENDU AVEC ESPACEMENT MANUEL ---
+# On simule le letter-spacing avec &nbsp; pour un centrage parfait sur tous les supports
 st.markdown(f"""
     <div class="hanna-header">
         <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
-        <h1 class="hanna-title">HANNA</h1>
+        <h1 class="hanna-title">H&nbsp;A&nbsp;N&nbsp;N&nbsp;A</h1>
         <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
     """, unsafe_allow_html=True)
