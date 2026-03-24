@@ -18,10 +18,10 @@ def get_ui_elements(file_path):
 
 LOGO_B64 = get_ui_elements(LOGO_FILE)
 
-# --- ARCHITECTURE CSS (CHAT CLASSIQUE) ---
+# --- ARCHITECTURE CSS (CHAT PREMIUM) ---
 st.markdown(f"""
     <style>
-    .block-container {{ padding: 1rem 1rem 0; max-width: 550px; }}
+    .block-container {{ padding: 1rem 1rem 5rem; max-width: 550px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
     .hanna-header {{ text-align: center; margin-bottom: 2rem; width: 100%; }}
@@ -39,41 +39,38 @@ st.markdown(f"""
         text-align: center; width: 100%;
     }}
 
-    /* Styles des bulles de Chat */
-    .chat-container {{ margin-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }}
-    
-    .bubble {{ 
-        padding: 12px 18px; border-radius: 18px; font-size: 15px; 
-        max-width: 85%; line-height: 1.4; animation: fadeIn 0.3s ease;
+    /* Bulles de Chat Style Minimaliste */
+    .stChatMessage {{ background-color: transparent !important; border: none !important; }}
+    .stChatMessage [data-testid="stChatMessageContent"] {{
+        background-color: #f8f9fa;
+        border-radius: 15px;
+        padding: 15px;
+        font-size: 15px;
+        color: #333;
+        border: 1px solid #eee;
     }}
     
-    .user-bubble {{ 
-        align-self: flex-end; background-color: #f0f0f0; color: #333; 
-        border-bottom-right-radius: 4px; 
-    }}
-    
-    .hanna-bubble {{ 
-        align-self: flex-start; background-color: #ffffff; color: #000; 
-        border: 1px solid #eee; border-bottom-left-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    /* Différenciation User / Assistant */
+    [data-testid="stChatMessage"]:nth-child(even) [data-testid="stChatMessageContent"] {{
+        background-color: #ffffff;
+        border: 1px solid #000;
+        color: #000;
     }}
 
-    /* Fixation de l'input en bas de page (optionnel) */
-    div.stChatInput {{ margin-top: 2rem; }}
-    
-    @keyframes fadeIn {{ from {{ opacity: 0; transform: translateY(10px); }} to {{ opacity: 1; transform: translateY(0); }} }}
     #MainMenu, footer, header {{visibility: hidden;}}
     </style>
     """, unsafe_allow_html=True)
 
-# --- INITIALISATION DE L'HISTORIQUE ---
+# --- INITIALISATION DU CERVEAU (SESSION STATE) ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
 # --- RENDU HEADER ---
 st.markdown(f"""
     <div class="hanna-header">
-        <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        <div style="display: flex; justify-content: center; width: 100%;">
+            <img src="data:image/png;base64,{LOGO_B64}" class="hanna-logo">
+        </div>
         <h1 class="hanna-title">H&nbsp;A&nbsp;N&nbsp;N&nbsp;A</h1>
         <p class="hanna-sub">Hybrid Adaptive Navigator & Network Assistant</p>
     </div>
@@ -81,19 +78,44 @@ st.markdown(f"""
 
 # --- AFFICHAGE DE LA CONVERSATION ---
 for message in st.session_state.messages:
-    role_class = "user-bubble" if message["role"] == "user" else "hanna-bubble"
-    st.markdown(f"""<div class="bubble {role_class}">{message["content"]}</div>""", unsafe_allow_html=True)
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
 
-# --- ZONE DE SAISIE (STREAMLIT CHAT INPUT) ---
+# --- LOGIQUE DE RÉPONSE INTELLIGENTE ---
+def generate_hanna_response(prompt):
+    """
+    Ici s'exécute l'intelligence de HANNA.
+    Pour l'instant, elle simule une réflexion adaptative.
+    """
+    prompt_l = prompt.lower()
+    if "bonjour" in prompt_l or "salut" in prompt_l:
+        return "Bonjour. Je suis HANNA, votre assistant adaptatif. Comment puis-je vous aider aujourd'hui ?"
+    elif "qui es-tu" in prompt_l:
+        return "Je suis le Hybrid Adaptive Navigator & Network Assistant (HANNA), opérant sous le protocole BDD-V10.3."
+    elif "statut" in prompt_l:
+        return f"Systèmes nominaux. Architecture V10.3 active. Temps de réponse actuel : {time.process_time():.4f}s."
+    else:
+        # Ici, nous pourrions appeler openai.ChatCompletion.create(...)
+        return f"Analyse en cours pour : '{prompt}'. Ma base de connaissances s'affine pour répondre précisément à cette requête."
+
+# --- ZONE DE SAISIE ---
 if prompt := st.chat_input("Demander à HANNA"):
     # Ajout du message utilisateur
     st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
     
-    # Génération de la réponse HANNA (Logique BDD-V10.3)
-    with st.spinner(''):
-        time.sleep(0.4)
-        # Logique de réponse temporaire
-        response = f"Système HANNA v10.3 en ligne. Analyse de : '{prompt}'..."
+    # Génération de la réponse
+    with st.chat_message("assistant"):
+        message_placeholder = st.empty()
+        full_response = ""
+        hanna_reply = generate_hanna_response(prompt)
         
-    st.session_state.messages.append({"role": "assistant", "content": response})
-    st.rerun()
+        # Effet de frappe progressive (Streaming effect)
+        for chunk in hanna_reply.split():
+            full_response += chunk + " "
+            time.sleep(0.05)
+            message_placeholder.markdown(full_response + "▌")
+        message_placeholder.markdown(full_response)
+    
+    st.session_state.messages.append({"role": "assistant", "content": hanna_reply})
