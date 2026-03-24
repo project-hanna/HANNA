@@ -37,7 +37,7 @@ st.markdown(f"""
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
-        font-size: 62px; 
+        font-size: 52px; 
         color: #000; 
         text-transform: uppercase; 
         margin: 0; 
