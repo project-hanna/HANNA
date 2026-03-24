@@ -6,7 +6,6 @@ import os
 # --- CONFIGURATION ---
 LOGO_FILE = "logo1.png"
 
-# Correction de l'erreur ici : set_page_config
 st.set_page_config(page_title="HANNA", layout="centered")
 
 @st.cache_data
@@ -26,12 +25,14 @@ st.markdown(f"""
     .block-container {{ padding: 1rem 1rem 0; max-width: 500px; }}
     .stApp {{ background: #fff; font-family: 'Inter', sans-serif; }}
     
+    /* Centrage Global */
     .hanna-header {{ 
         text-align: center; 
         margin-bottom: 2rem; 
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: 100%;
     }}
     
     .hanna-logo-wrapper {{
@@ -45,6 +46,7 @@ st.markdown(f"""
         width: 120px; 
     }}
     
+    /* Centrage de HANNA avec compensation optique */
     .hanna-title {{ 
         font-weight: 200; 
         letter-spacing: 14px; 
@@ -53,7 +55,8 @@ st.markdown(f"""
         text-transform: uppercase; 
         margin: 0; 
         line-height: 1.1;
-        padding-left: 14px; 
+        padding-left: 14px; /* Compense l'espace de la dernière lettre pour centrer parfaitement */
+        display: block;
         width: 100%;
         text-align: center;
     }}
@@ -65,11 +68,13 @@ st.markdown(f"""
         letter-spacing: 2px; 
         text-transform: uppercase; 
         margin-top: 5px;
-        padding-left: 2px; 
+        padding-left: 2px; /* Équilibre également le sous-titre */
+        display: block;
         width: 100%;
         text-align: center;
     }}
 
+    /* Inputs Design */
     div.stTextInput > div > div > input {{ 
         text-align: center; 
         border-radius: 8px; 
@@ -102,5 +107,5 @@ st.markdown(f"""
 user_input = st.text_input("", placeholder="Demander à HANNA", label_visibility="collapsed")
 
 if user_input:
-    # Traitement
+    # Logique de traitement
     pass
